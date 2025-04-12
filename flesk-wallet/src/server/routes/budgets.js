@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const authMiddleware = require('../middlewares/authMiddleware'); // Notez le 's'
 
 // @route   GET api/budgets
 // @desc    Get all budgets for a user
