@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#FFB800"/>
+  
+  <!-- Stylized F shape -->
+  <path d="M180 140
+           L380 140
+           L380 220
+           L260 220
+           L260 250
+           L340 250
+           L340 330
+           L260 330
+           L260 420
+           L180 420
+           Z" 
+        fill="#FF5733"/>
+</svg> 
