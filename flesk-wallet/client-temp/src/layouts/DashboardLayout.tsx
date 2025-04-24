@@ -1,155 +1,130 @@
-import React, { useState, useEffect } from 'react';
-import { Box, CssBaseline, Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Menu, Badge } from '@mui/material';
-import { Menu as MenuIcon, Dashboard as DashboardIcon, AccountBalance as AccountBalanceIcon, Settings as SettingsIcon, Savings as SavingsIcon, Notifications as NotificationsIcon, Subscriptions as SubscriptionsIcon, AccountBalanceWallet as AccountBalanceWalletIcon } from '@mui/icons-material';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import NotificationList from '../components/NotificationList';
-import { getNotifications } from '../services/notificationService';
-import { Notification } from '../types/notification';
+import React, { useState } from 'react';
+import {
+  Box,
+  Drawer,
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useTheme,
+  Avatar,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import {
+  Menu as MenuIcon,
+  Dashboard as DashboardIcon,
+  AccountBalance as AccountBalanceIcon,
+  TrendingUp as TrendingUpIcon,
+  TrendingDown as TrendingDownIcon,
+  Settings as SettingsIcon,
+  Person as PersonIcon,
+  Logout as LogoutIcon,
+} from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { getCurrentUser, logout } from '../services/authService';
 
 const drawerWidth = 240;
 
-const DashboardLayout: React.FC = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [notificationAnchor, setNotificationAnchor] = useState<null | HTMLElement>(null);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [budgetAlerts, setBudgetAlerts] = useState(0);
+interface DashboardLayoutProps {
+  children: React.ReactNode;
+}
+
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const theme = useTheme();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const getPageTitle = (pathname: string): string => {
-    const lastSegment = pathname.split('/').pop();
-    if (!lastSegment) return 'Dashboard';
-    return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1);
-  };
-
-  const loadNotifications = async () => {
-    try {
-      const notifications = await getNotifications();
-      const unreadNotifications = notifications.filter(n => !n.isRead);
-      setUnreadCount(unreadNotifications.length);
-      
-      const unreadBudgetAlerts = unreadNotifications.filter(
-        n => n.type === 'BUDGET_ALERT'
-      ).length;
-      setBudgetAlerts(unreadBudgetAlerts);
-    } catch (error) {
-      console.error('Error loading notifications:', error);
-    }
-  };
-
-  useEffect(() => {
-    loadNotifications();
-    // Rafraîchir les notifications toutes les minutes
-    const interval = setInterval(loadNotifications, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Recharger les notifications quand on change de page
-  useEffect(() => {
-    loadNotifications();
-  }, [location.pathname]);
+  const user = getCurrentUser();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
-    setNotificationAnchor(event.currentTarget);
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleNotificationClose = () => {
-    setNotificationAnchor(null);
-    loadNotifications();
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-    { text: 'Transactions', icon: <AccountBalanceIcon />, path: '/dashboard/transactions' },
-    { 
-      text: 'Budgets', 
-      icon: budgetAlerts > 0 ? (
-        <Badge badgeContent={budgetAlerts} color="error" sx={{ '& .MuiBadge-badge': { right: -3, top: 3 } }}>
-          <AccountBalanceWalletIcon />
-        </Badge>
-      ) : <AccountBalanceWalletIcon />,
-      path: '/dashboard/budgets' 
-    },
-    { text: 'Épargne', icon: <SavingsIcon />, path: '/dashboard/savings' },
-    { text: 'Abonnements', icon: <SubscriptionsIcon />, path: '/dashboard/subscriptions' },
-    { text: 'Settings', icon: <SettingsIcon />, path: '/dashboard/settings' },
+    { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/dashboard' },
+    { text: 'Comptes', icon: <AccountBalanceIcon />, path: '/accounts' },
+    { text: 'Revenus', icon: <TrendingUpIcon />, path: '/incomes' },
+    { text: 'Dépenses', icon: <TrendingDownIcon />, path: '/expenses' },
+    { text: 'Paramètres', icon: <SettingsIcon />, path: '/settings' },
   ];
 
   const drawer = (
-    <div>
+    <Box>
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          Flesk Wallet
+        <Typography variant="h6" sx={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>
+          FLESK WALLET
         </Typography>
       </Toolbar>
-      <Divider />
       <List>
         {menuItems.map((item) => (
-          <ListItem 
-            button 
-            key={item.text} 
-            onClick={() => {
-              navigate(item.path);
-              if (item.text === 'Budgets') {
-                // Marquer automatiquement les notifications de budget comme lues
-                // quand on accède à la page des budgets
-                loadNotifications();
-              }
+          <ListItem
+            button
+            key={item.text}
+            onClick={() => navigate(item.path)}
+            sx={{
+              '&:hover': {
+                backgroundColor: 'rgba(255, 87, 51, 0.08)',
+              },
             }}
-            selected={location.pathname === item.path}
           >
-            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemIcon sx={{ color: theme.palette.text.primary }}>
+              {item.icon}
+            </ListItemIcon>
             <ListItemText primary={item.text} />
           </ListItem>
         ))}
       </List>
-    </div>
+    </Box>
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+    <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
       <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          bgcolor: 'background.default',
+          boxShadow: 'none',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
         <Toolbar>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {getPageTitle(location.pathname)}
-          </Typography>
-          <IconButton color="inherit" onClick={handleNotificationClick}>
-            <Badge badgeContent={unreadCount} color="error">
-              <NotificationsIcon />
-            </Badge>
+          <Box sx={{ flexGrow: 1 }} />
+          <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0 }}>
+            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+              {user?.firstName?.[0]?.toUpperCase() || 'U'}
+            </Avatar>
           </IconButton>
-          <Menu
-            anchorEl={notificationAnchor}
-            open={Boolean(notificationAnchor)}
-            onClose={handleNotificationClose}
-            PaperProps={{
-              sx: { width: '400px', maxHeight: '500px' }
-            }}
-          >
-            <NotificationList onNotificationUpdate={loadNotifications} />
-          </Menu>
         </Toolbar>
       </AppBar>
+
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -163,7 +138,12 @@ const DashboardLayout: React.FC = () => {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              bgcolor: 'background.default',
+              borderRight: '1px solid rgba(255, 255, 255, 0.12)',
+            },
           }}
         >
           {drawer}
@@ -172,26 +152,56 @@ const DashboardLayout: React.FC = () => {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              bgcolor: 'background.default',
+              borderRight: '1px solid rgba(255, 255, 255, 0.12)',
+            },
           }}
           open
         >
           {drawer}
         </Drawer>
       </Box>
+
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          backgroundColor: '#F5F5F5',
-          minHeight: '100vh',
+          mt: '64px',
         }}
       >
-        <Toolbar />
-        <Outlet />
+        {children}
       </Box>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleProfileMenuClose}
+        onClick={handleProfileMenuClose}
+        PaperProps={{
+          sx: {
+            bgcolor: 'background.default',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+          },
+        }}
+      >
+        <MenuItem onClick={() => navigate('/profile')}>
+          <ListItemIcon>
+            <PersonIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Profile</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon>
+            <LogoutIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Déconnexion</ListItemText>
+        </MenuItem>
+      </Menu>
     </Box>
   );
 };

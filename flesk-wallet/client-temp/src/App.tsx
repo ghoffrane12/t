@@ -1,34 +1,30 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import Dashboard from './pages/Dashboard';
+import TransactionsPage from './pages/TransactionsPage';
+import ExpensesPage from './pages/ExpensesPage';
+import IncomesPage from './pages/IncomesPage';
+import SavingsPage from './pages/SavingsPage';
+import BudgetsPage from './pages/BudgetsPage';
+import LocationPage from './pages/LocationPage';
+import NotificationsPage from './pages/NotificationsPage';
+import PrivateRoute from './components/PrivateRoute';
 
-// Layouts
-import DashboardLayout from './layouts/DashboardLayout';
-
-// Pages
-import Dashboard from './pages/dashboard/Dashboard';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import NotFound from './pages/NotFound/NotFound';
-import TransactionsPage from './pages/transactions/TransactionsPage';
-import BudgetsPage from './pages/budgets/BudgetsPage';
-import Settings from './pages/settings/Settings';
-import SubscriptionsPage from './pages/subscriptions/SubscriptionsPage';
-import SavingsPage from './pages/savings/SavingsPage';
-
-// Create theme
+// Création du thème personnalisé
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#FF5733',
+      main: '#4CAF50',
     },
     secondary: {
-      main: '#FFB800',
+      main: '#FF5733',
     },
     background: {
-      default: '#FFFFFF',
-      paper: '#F5F5F5',
+      default: '#F8F9FA',
     },
   },
   typography: {
@@ -43,30 +39,93 @@ const theme = createTheme({
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+        },
+      },
+    },
   },
 });
 
-function App() {
+const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="transactions" element={<TransactionsPage />} />
-          <Route path="budgets" element={<BudgetsPage />} />
-          <Route path="savings" element={<SavingsPage />} />
-          <Route path="subscriptions" element={<SubscriptionsPage />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-        <Route path="/404" element={<NotFound />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/404" replace />} />
-      </Routes>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <PrivateRoute>
+                <TransactionsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/expenses"
+            element={
+              <PrivateRoute>
+                <ExpensesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/incomes"
+            element={
+              <PrivateRoute>
+                <IncomesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/savings"
+            element={
+              <PrivateRoute>
+                <SavingsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/budgets"
+            element={
+              <PrivateRoute>
+                <BudgetsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/location"
+            element={
+              <PrivateRoute>
+                <LocationPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <PrivateRoute>
+                <NotificationsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
-}
+};
 
-export default App;
+export default App; 

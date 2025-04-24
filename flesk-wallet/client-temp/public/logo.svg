@@ -1,18 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="512" height="512" fill="#FFB800"/>
-  
-  <!-- Stylized F shape -->
-  <path d="M180 140
-           L380 140
-           L380 220
-           L260 220
-           L260 250
-           L340 250
-           L340 330
-           L260 330
-           L260 420
-           L180 420
-           Z" 
-        fill="#FF5733"/>
+    <!-- Cercle de fond -->
+    <circle cx="256" cy="256" r="240" fill="#1E1E2D"/>
+    
+    <!-- Flamme stylisée -->
+    <path d="M256 96C200 160 176 208 176 272C176 344 208 384 256 384C304 384 336 344 336 272C336 208 312 160 256 96Z" fill="#FF5733"/>
+    
+    <!-- Reflet -->
+    <path d="M256 96C280 144 292 184 292 272C292 344 276 368 256 368C304 368 336 328 336 256C336 192 312 144 256 96Z" fill="#FF7F50" fillOpacity="0.5"/>
+    
+    <!-- Base -->
+    <path d="M176 320C176 364.183 211.817 400 256 400C300.183 400 336 364.183 336 320H176Z" fill="#FF5733"/>
 </svg> 
