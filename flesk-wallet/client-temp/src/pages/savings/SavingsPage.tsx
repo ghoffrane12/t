@@ -17,26 +17,18 @@ import {
   Alert,
   Chip,
   CircularProgress,
-  Paper,
 } from '@mui/material';
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, TrendingUp, AddCircle } from '@mui/icons-material';
+import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import {
   SavingGoal,
-  AnalysisData,
   getAllSavingGoals,
   createSavingGoal,
   updateSavingGoal,
   deleteSavingGoal,
-  getAnalysis,
 } from '../../services/savingGoalService';
-import TransactionHistory from '../../components/TransactionHistory';
-import SmartBudget from '../../components/SmartBudget';
-import SubscriptionManager from '../../components/SubscriptionManager';
-import SpendingAnalysis from '../../components/SpendingAnalysis';
-import BudgetForecast from '../../components/BudgetForecast';
 
 const CATEGORIES = [
   { value: 'VOYAGE', label: 'Voyage' },
@@ -48,7 +40,6 @@ const CATEGORIES = [
 
 const SavingsPage: React.FC = () => {
   const [goals, setGoals] = useState<SavingGoal[]>([]);
-  const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -62,25 +53,22 @@ const SavingsPage: React.FC = () => {
     monthlyContribution: '',
   });
 
-  const loadData = async () => {
+  const loadGoals = async () => {
     try {
       setLoading(true);
-      const [goalsData, analysisData] = await Promise.all([
-        getAllSavingGoals(),
-        getAnalysis(),
-      ]);
-      setGoals(goalsData);
-      setAnalysis(analysisData);
+      const data = await getAllSavingGoals();
+      setGoals(data);
       setError(null);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Erreur lors de la récupération des objectifs d'épargne");
+      console.error('Erreur détaillée:', err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadData();
+    loadGoals();
   }, []);
 
   const handleOpenDialog = (goal?: SavingGoal) => {
@@ -131,9 +119,9 @@ const SavingsPage: React.FC = () => {
       }
 
       handleCloseDialog();
-      loadData();
+      loadGoals();
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Une erreur est survenue lors de l'enregistrement");
     }
   };
 
@@ -141,18 +129,10 @@ const SavingsPage: React.FC = () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet objectif ?')) {
       try {
         await deleteSavingGoal(id);
-        loadData();
+        loadGoals();
       } catch (err: any) {
-        setError(err.message);
+        setError(err.message || "Erreur lors de la suppression de l'objectif");
       }
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'ATTEINT': return 'success';
-      case 'EN_RETARD': return 'error';
-      default: return 'primary';
     }
   };
 
@@ -172,175 +152,81 @@ const SavingsPage: React.FC = () => {
         </Alert>
       )}
 
-      {/* Analyse des dépenses */}
-      <Box mb={4}>
-        <SpendingAnalysis />
-      </Box>
-
-      {/* Simulation de budget */}
-      <Box mb={4}>
-        <BudgetForecast />
-      </Box>
-
-      {/* Analyse des tendances */}
-      {analysis && (
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
-              Analyse des dépenses
-            </Typography>
-            <Grid container spacing={2}>
-              {analysis.insights.map((insight, index) => (
-                <Grid item xs={12} key={index}>
-                  <Alert severity={insight.type === 'WARNING' ? 'warning' : 'success'}>
-                    {insight.message}
-                  </Alert>
-                </Grid>
-              ))}
-              {Object.entries(analysis.predictions).map(([category, prediction]) => (
-                <Grid item xs={12} sm={6} md={4} key={category}>
-                  <Box>
-                    <Typography variant="subtitle1">
-                      {category} - Prévision du mois prochain
-                    </Typography>
-                    <Typography variant="h6">
-                      {prediction.predictedAmount.toFixed(2)} DT
-                    </Typography>
-                    <Chip
-                      size="small"
-                      label={`Confiance: ${prediction.confidence}`}
-                      color={prediction.confidence === 'ÉLEVÉ' ? 'success' : 'warning'}
-                    />
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Header with Add Button */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      {/* En-tête avec titre et bouton d'ajout */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-          Tableau de bord
+          Objectifs d'épargne
         </Typography>
-        <IconButton 
-          sx={{ 
-            bgcolor: '#FF5733',
-            color: 'white',
-            '&:hover': {
-              bgcolor: '#E64A2E',
-            },
-          }}
-        >
-          <AddCircle />
-        </IconButton>
-      </Box>
-
-      <Grid container spacing={3}>
-        {/* Wallet Balance */}
-        <Grid item xs={12} md={4}>
-          <Paper 
-            sx={{ 
-              p: 3,
-              bgcolor: '#1B1B3A',
-              color: 'white',
-              borderRadius: 2,
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              WALLET
-            </Typography>
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-              {/* Replace with actual wallet balance */}
-              800 DT
-            </Typography>
-          </Paper>
-        </Grid>
-
-        {/* Smart Budget Summary */}
-        <Grid item xs={12} md={8}>
-          <SmartBudget />
-        </Grid>
-
-        {/* Chart */}
-        <Grid item xs={12}>
-          {/* Replace with actual ExpenseRevenueChart component */}
-          ExpenseRevenueChart
-        </Grid>
-
-        {/* Subscription Manager */}
-        <Grid item xs={12} md={6}>
-          <SubscriptionManager />
-        </Grid>
-
-        {/* Recent Transactions */}
-        <Grid item xs={12} md={6}>
-          <TransactionHistory />
-        </Grid>
-      </Grid>
-
-      {/* Bouton d'ajout */}
-      <Box display="flex" justifyContent="flex-end" mb={2}>
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
         >
-          Ajouter un objectif
+          Nouvel objectif
         </Button>
       </Box>
 
       {/* Liste des objectifs */}
       <Grid container spacing={3}>
-        {goals.map((goal) => (
-          <Grid item xs={12} sm={6} md={4} key={goal._id}>
+        {goals.length === 0 ? (
+          <Grid item xs={12}>
             <Card>
               <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6">{goal.name}</Typography>
-                  <Chip
-                    label={goal.status}
-                    color={getStatusColor(goal.status)}
-                    size="small"
-                  />
-                </Box>
-                <Typography variant="h4" color="primary" gutterBottom>
-                  {goal.currentAmount} / {goal.targetAmount} DT
+                <Typography variant="h6" align="center" color="textSecondary">
+                  Aucun objectif d'épargne pour le moment
                 </Typography>
-                <LinearProgress
-                  variant="determinate"
-                  value={(goal.currentAmount / goal.targetAmount) * 100}
-                  sx={{ mb: 2, height: 8, borderRadius: 4 }}
-                />
-                <Typography variant="body2" color="textSecondary" gutterBottom>
-                  Objectif mensuel : {goal.monthlyContribution} DT
+                <Typography variant="body2" align="center" color="textSecondary" sx={{ mt: 1 }}>
+                  Commencez par créer votre premier objectif !
                 </Typography>
-                <Typography variant="body2" color="textSecondary" gutterBottom>
-                  Date limite : {new Date(goal.deadline).toLocaleDateString()}
-                </Typography>
-                <Chip
-                  label={CATEGORIES.find(c => c.value === goal.category)?.label}
-                  size="small"
-                  sx={{ mt: 1 }}
-                />
               </CardContent>
-              <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton onClick={() => handleOpenDialog(goal)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => handleDelete(goal._id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
             </Card>
           </Grid>
-        ))}
+        ) : (
+          goals.map((goal) => (
+            <Grid item xs={12} sm={6} md={4} key={goal._id}>
+              <Card>
+                <CardContent>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="h6">{goal.name}</Typography>
+                    <Chip
+                      label={goal.status}
+                      color={goal.status === 'ATTEINT' ? 'success' : goal.status === 'EN_RETARD' ? 'error' : 'primary'}
+                      size="small"
+                    />
+                  </Box>
+                  <Typography variant="h4" color="primary" gutterBottom>
+                    {goal.currentAmount} / {goal.targetAmount} DT
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={(goal.currentAmount / goal.targetAmount) * 100}
+                    sx={{ mb: 2, height: 8, borderRadius: 4 }}
+                  />
+                  <Typography variant="body2" color="textSecondary" gutterBottom>
+                    Objectif mensuel : {goal.monthlyContribution} DT
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" gutterBottom>
+                    Date limite : {new Date(goal.deadline).toLocaleDateString()}
+                  </Typography>
+                  <Chip
+                    label={CATEGORIES.find(c => c.value === goal.category)?.label}
+                    size="small"
+                    sx={{ mt: 1 }}
+                  />
+                  <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                    <IconButton onClick={() => handleOpenDialog(goal)} size="small">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(goal._id)} size="small">
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))
+        )}
       </Grid>
 
       {/* Formulaire d'ajout/modification */}
