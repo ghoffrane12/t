@@ -352,7 +352,7 @@ const BudgetsPage: React.FC = () => {
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant="h5" sx={{ color: '#FF5733', fontWeight: 'bold' }}>
-                {budget.amount}€
+                {budget.amount}DT
               </Typography>
               <Chip 
                 label={budget.category} 

@@ -1,0 +1,31 @@
+{
+  "short_name": "Flesk Wallet",
+  "name": "Flesk Wallet - Gestion de finances personnelles",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#4CAF50",
+  "background_color": "#ffffff",
+  "description": "Application de gestion de finances personnelles avec suivi des dépenses, budgets et objectifs d'épargne",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "productivity"],
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "prefer_related_applications": false
+}

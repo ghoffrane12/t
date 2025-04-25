@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -14,6 +14,8 @@ import {
   FormControlLabel,
   Switch,
   Paper,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -24,6 +26,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import fr from 'date-fns/locale/fr';
 import Sidebar from '../components/Sidebar';
+import { getBudgets, createBudget, updateBudget, deleteBudget } from '../services/budgetService';
+import { Budget } from '../types/budget';
 
 interface FormData {
   name: string;
@@ -42,6 +46,9 @@ interface FormData {
 
 const BudgetsPage: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     amount: '',
@@ -56,6 +63,24 @@ const BudgetsPage: React.FC = () => {
     },
     tags: ''
   });
+
+  useEffect(() => {
+    fetchBudgets();
+  }, []);
+
+  const fetchBudgets = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const fetchedBudgets = await getBudgets();
+      setBudgets(fetchedBudgets);
+    } catch (err) {
+      setError('Erreur lors de la récupération des budgets');
+      console.error('Erreur:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -77,8 +102,49 @@ const BudgetsPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implémenter la création du budget
-    setOpenDialog(false);
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const budgetData = {
+        name: formData.name,
+        amount: parseFloat(formData.amount),
+        remainingAmount: parseFloat(formData.amount),
+        category: formData.category,
+        period: formData.period as 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY',
+        startDate: formData.startDate ? formData.startDate.toISOString() : new Date().toISOString(),
+        endDate: formData.endDate ? formData.endDate.toISOString() : undefined,
+        status: 'ACTIVE' as const,
+        description: formData.description,
+        notifications: formData.notifications,
+        tags: formData.tags.split(',').map(tag => tag.trim()),
+      };
+
+      await createBudget(budgetData);
+      await fetchBudgets(); // Rafraîchir la liste
+      setOpenDialog(false);
+      
+      // Réinitialiser le formulaire
+      setFormData({
+        name: '',
+        amount: '',
+        category: '',
+        period: 'MONTHLY',
+        startDate: new Date(),
+        endDate: null,
+        description: '',
+        notifications: {
+          enabled: true,
+          threshold: 80
+        },
+        tags: ''
+      });
+    } catch (err) {
+      setError('Erreur lors de la création du budget');
+      console.error('Erreur:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const categories = [
@@ -125,6 +191,7 @@ const BudgetsPage: React.FC = () => {
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setOpenDialog(true)}
+            disabled={loading}
             sx={{
               bgcolor: '#FF5733',
               color: 'white',
@@ -137,10 +204,55 @@ const BudgetsPage: React.FC = () => {
           </Button>
         </Box>
 
-        {/* Liste des budgets à implémenter */}
-        <Grid container spacing={3}>
-          {/* Les cartes de budget seront affichées ici */}
-        </Grid>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {loading ? (
+          <Box display="flex" justifyContent="center" my={4}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Grid container spacing={3}>
+            {budgets.map((budget) => (
+              <Grid item xs={12} sm={6} md={4} key={budget.id}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    bgcolor: '#1E1E2D',
+                    color: 'white',
+                  }}
+                >
+                  <Typography variant="h6" gutterBottom>
+                    {budget.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    {budget.category}
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: '#FF5733' }}>
+                    {budget.amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Restant: {budget.remainingAmount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Début: {new Date(budget.startDate).toLocaleDateString('fr-FR')}
+                  </Typography>
+                  {budget.endDate && (
+                    <Typography variant="body2">
+                      Fin: {new Date(budget.endDate).toLocaleDateString('fr-FR')}
+                    </Typography>
+                  )}
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        )}
 
         {/* Dialog de création de budget */}
         <Dialog 
