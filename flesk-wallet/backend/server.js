@@ -20,7 +20,7 @@ app.use('/api/transactions', transactionRoutes);
 
 app.use('/api/saving-goals', savingGoalsRoutes);
 app.use('/api/budgets', budgetRoutes);
-
+ 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flesk-wallet', {
   useNewUrlParser: true,
