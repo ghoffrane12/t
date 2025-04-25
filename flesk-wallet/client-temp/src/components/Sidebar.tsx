@@ -57,6 +57,7 @@ const Sidebar = () => {
         }}
       >
         <Box
+          component="div"
           sx={{
             width: 32,
             height: 32,
@@ -68,6 +69,7 @@ const Sidebar = () => {
             color: 'white',
             fontWeight: 'bold',
             fontSize: '1.2rem',
+            fontFamily: "'Roboto', sans-serif",
           }}
         >
           F

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import {
   Box,
   Typography,
+  AppBar,
+  Toolbar,
+  Paper,
   Button,
   Dialog,
   DialogTitle,
@@ -9,15 +12,14 @@ import {
   TextField,
   DialogActions,
   MenuItem,
-  Paper,
 } from '@mui/material';
 import {
   Add as AddIcon,
-  Savings as SavingsIcon,
 } from '@mui/icons-material';
+import Sidebar from '../../components/Sidebar';
 
 interface SavingsGoal {
-  id: number;
+  id: string;
   name: string;
   targetAmount: number;
   currentAmount: number;
@@ -25,7 +27,7 @@ interface SavingsGoal {
   category: string;
 }
 
-const SavingsPage = () => {
+const SavingsPage: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [goals] = useState<SavingsGoal[]>([]);
 
@@ -58,36 +60,41 @@ const SavingsPage = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Paper 
-        elevation={0}
-        sx={{ 
-          p: 2, 
-          mb: 3, 
-          display: 'flex', 
-          alignItems: 'center',
-          bgcolor: '#FBE9E7',
-          borderRadius: 2
-        }}
-      >
-        <SavingsIcon sx={{ color: '#FF5733', mr: 2, fontSize: 32 }} />
-        <Typography variant="h4" sx={{ color: '#FF5733', fontWeight: 'bold' }}>
-          Épargne
-        </Typography>
-      </Paper>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
+      <Sidebar />
+      
+      <Box component="main" sx={{ flexGrow: 1, ml: '280px' }}>
+        {/* Barre orange supérieure */}
+        <AppBar position="static" sx={{ bgcolor: '#FF5733', boxShadow: 'none' }}>
+          <Toolbar sx={{ minHeight: '64px !important' }} />
+        </AppBar>
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 4 }}>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setOpenDialog(true)}
-          sx={{
-            bgcolor: '#FF5733',
-            '&:hover': { bgcolor: '#ff6b4a' },
-          }}
-        >
-          Nouvel objectif
-        </Button>
+        {/* Titre de la page */}
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h4" sx={{ color: '#000000', mb: 4, fontWeight: 500 }}>
+            Épargne
+          </Typography>
+
+          {/* Bouton Ajouter */}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 4 }}>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setOpenDialog(true)}
+              sx={{
+                bgcolor: '#FF5733',
+                '&:hover': { bgcolor: '#ff6b4a' },
+              }}
+            >
+              Nouvel objectif
+            </Button>
+          </Box>
+
+          {/* Contenu de la page */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3 }}>
+            {/* Le contenu spécifique à l'épargne sera ajouté ici */}
+          </Box>
+        </Box>
       </Box>
 
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>

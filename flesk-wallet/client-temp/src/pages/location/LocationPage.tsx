@@ -2,31 +2,35 @@ import React from 'react';
 import {
   Box,
   Typography,
+  AppBar,
+  Toolbar,
   Paper,
 } from '@mui/material';
-import { LocationOn } from '@mui/icons-material';
+import Sidebar from '../../components/Sidebar';
 
-const LocationPage = () => {
+const LocationPage: React.FC = () => {
   return (
-    <Box sx={{ p: 3 }}>
-      <Paper 
-        elevation={0}
-        sx={{ 
-          p: 2, 
-          mb: 3, 
-          display: 'flex', 
-          alignItems: 'center',
-          bgcolor: '#F3E5F5',
-          borderRadius: 2
-        }}
-      >
-        <LocationOn sx={{ color: '#9C27B0', mr: 2, fontSize: 32 }} />
-        <Typography variant="h4" sx={{ color: '#9C27B0', fontWeight: 'bold' }}>
-          Localisation
-        </Typography>
-      </Paper>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
+      <Sidebar />
+      
+      <Box component="main" sx={{ flexGrow: 1, ml: '280px' }}>
+        {/* Barre orange supérieure */}
+        <AppBar position="static" sx={{ bgcolor: '#FF5733', boxShadow: 'none' }}>
+          <Toolbar sx={{ minHeight: '64px !important' }} />
+        </AppBar>
 
-      {/* Contenu de la page */}
+        {/* Titre de la page */}
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h4" sx={{ color: '#000000', mb: 4, fontWeight: 500 }}>
+            Localisation
+          </Typography>
+
+          {/* Contenu de la page */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3 }}>
+            {/* Le contenu spécifique à la localisation sera ajouté ici */}
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };

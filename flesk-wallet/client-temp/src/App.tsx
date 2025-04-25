@@ -6,12 +6,12 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import TransactionsPage from './pages/TransactionsPage';
-import ExpensesPage from './pages/ExpensesPage';
-import IncomesPage from './pages/IncomesPage';
-import SavingsPage from './pages/SavingsPage';
-import BudgetsPage from './pages/BudgetsPage';
-import LocationPage from './pages/LocationPage';
-import NotificationsPage from './pages/NotificationsPage';
+import ExpensesPage from './pages/expenses/ExpensesPage';
+import RevenuesPage from './pages/revenues/RevenuesPage';
+import SavingsPage from './pages/savings/SavingsPage';
+import BudgetsPage from './pages/budgets/BudgetsPage';
+import LocationPage from './pages/location/LocationPage';
+import NotificationsPage from './pages/notifications/NotificationsPage';
 import PrivateRoute from './components/PrivateRoute';
 
 // Création du thème personnalisé
@@ -85,7 +85,7 @@ const App: React.FC = () => {
             path="/incomes"
             element={
               <PrivateRoute>
-                <IncomesPage />
+                <RevenuesPage />
               </PrivateRoute>
             }
           />

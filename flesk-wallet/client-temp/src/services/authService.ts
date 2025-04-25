@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+import api from '../config/api';
 
 export interface LoginResponse {
   token: string;
@@ -14,7 +12,7 @@ export interface LoginResponse {
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
   try {
-    const response = await axios.post(`${API_URL}/auth/login`, {
+    const response = await api.post('/auth/login', {
       email,
       password,
     });
@@ -36,7 +34,7 @@ export const register = async (
   lastName: string
 ): Promise<LoginResponse> => {
   try {
-    const response = await axios.post(`${API_URL}/auth/register`, {
+    const response = await api.post('/auth/register', {
       email,
       password,
       firstName,
@@ -69,13 +67,4 @@ export const getCurrentUser = () => {
 
 export const isAuthenticated = () => {
   return !!localStorage.getItem('token');
-};
-
-// Configuration d'axios pour inclure le token dans les requêtes
-axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}); 
+}; 

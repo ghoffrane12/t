@@ -6,7 +6,7 @@ const theme = createTheme({
       main: '#FF5733', // La couleur orange du logo
     },
     background: {
-      default: '#1E1B3C', // Couleur de fond bleu foncé
+      default: '#000000', // Couleur de fond noire
     },
     text: {
       primary: '#FFFFFF',
