@@ -142,3 +142,49 @@ exports.getBudgetStats = async (req, res) => {
     });
   }
 };
+
+// Déduire un montant du budget
+exports.deductFromBudget = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    
+    if (!amount || amount <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Le montant à déduire doit être positif'
+      });
+    }
+
+    const budget = await Budget.findOne({ _id: req.params.id, userId: req.user.id });
+
+    if (!budget) {
+      return res.status(404).json({
+        success: false,
+        message: 'Budget non trouvé'
+      });
+    }
+
+    // Vérifier si le montant à déduire est disponible
+    if (amount > budget.remainingAmount) {
+      return res.status(400).json({
+        success: false,
+        message: 'Le montant à déduire est supérieur au montant restant'
+      });
+    }
+
+    // Mettre à jour le montant dépensé
+    budget.currentSpending += amount;
+    await budget.save();
+
+    res.json({
+      success: true,
+      data: budget
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la déduction du montant',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Une erreur est survenue'
+    });
+  }
+};

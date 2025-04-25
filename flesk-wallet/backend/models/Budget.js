@@ -38,7 +38,7 @@ const budgetSchema = new mongoose.Schema({
   currentSpending: {
     type: Number,
     default: 0,
-    min: 0
+    min: [0, 'Les dépenses ne peuvent pas être négatives']
   },
   status: {
     type: String,
@@ -52,9 +52,9 @@ const budgetSchema = new mongoose.Schema({
     },
     threshold: {
       type: Number,
-      min: 0,
-      max: 100,
-      default: 80 // Notification quand 80% du budget est utilisé
+      default: 80,
+      min: [0, 'Le seuil ne peut pas être négatif'],
+      max: [100, 'Le seuil ne peut pas dépasser 100']
     }
   },
   description: {
@@ -66,7 +66,9 @@ const budgetSchema = new mongoose.Schema({
     trim: true
   }]
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 // Index pour améliorer les performances des requêtes
@@ -81,7 +83,7 @@ budgetSchema.virtual('percentageUsed').get(function() {
 
 // Méthode virtuelle pour calculer le montant restant
 budgetSchema.virtual('remainingAmount').get(function() {
-  return this.amount - this.currentSpending;
+  return this.amount - (this.currentSpending || 0);
 });
 
 // Ajoutez ce middleware

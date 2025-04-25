@@ -222,18 +222,16 @@ const BudgetsPage: React.FC = () => {
         return;
       }
 
+      // Appel à l'API pour mettre à jour le budget
+      const updatedBudget = await deductFromBudget(selectedBudgetForDeduction.id, deductionAmount);
+      
       // Mise à jour locale du budget
-      const updatedBudgets = budgets.map(budget => {
-        if (budget.id === selectedBudgetForDeduction.id) {
-          return {
-            ...budget,
-            remainingAmount: budget.remainingAmount - deductionAmount
-          };
-        }
-        return budget;
-      });
+      setBudgets(prevBudgets => 
+        prevBudgets.map(budget => 
+          budget.id === updatedBudget.id ? updatedBudget : budget
+        )
+      );
 
-      setBudgets(updatedBudgets);
       setDeductDialogOpen(false);
       setSelectedBudgetForDeduction(null);
       setDeductionAmount(0);

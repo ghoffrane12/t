@@ -6,21 +6,21 @@ const {
   createBudget,
   updateBudget,
   deleteBudget,
-  getBudgetStats
+  getBudgetStats,
+  deductFromBudget
 } = require('../controllers/budgetController');
 
 // Protection de toutes les routes
 router.use(protect);
 
 // Routes pour les budgets
-router.get('/', getBudgets);
-router.post('/', protect, async (req, res, next) => {
-  console.log('Route budget appelée');
-  console.log('User dans la requête:', req.user);
-  next();
-}, createBudget);
-router.put('/:id', updateBudget);
-router.delete('/:id', deleteBudget);
+router.route('/')
+  .get(getBudgets)
+  .post(createBudget);
+
 router.get('/stats', getBudgetStats);
+router.put('/:id', updateBudget);
+router.put('/:id/deduct', deductFromBudget);
+router.delete('/:id', deleteBudget);
 
 module.exports = router;

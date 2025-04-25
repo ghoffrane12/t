@@ -73,7 +73,7 @@ export const deductFromBudget = async (id: string, amount: number): Promise<Budg
     return {
       ...updatedBudget,
       id: updatedBudget._id,
-      remainingAmount: updatedBudget.remainingAmount ?? updatedBudget.amount
+      remainingAmount: updatedBudget.amount - (updatedBudget.currentSpending || 0)
     };
   } catch (error) {
     console.error('Erreur lors de la déduction du budget:', error);
