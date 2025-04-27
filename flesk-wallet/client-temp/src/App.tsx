@@ -6,7 +6,8 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import TransactionsPage from './pages/TransactionsPage';
-import ExpensesPage from './pages/expenses/ExpensesPage';
+import ExpensesPage from './pages/ExpensesPage';
+import SubscriptionsPage from './pages/SubscriptionsPage';
 import RevenuesPage from './pages/revenues/RevenuesPage';
 import SavingsPage from './pages/SavingsPage';
 import BudgetsPage from './pages/budgets/BudgetsPage';
@@ -78,6 +79,14 @@ const App: React.FC = () => {
             element={
               <PrivateRoute>
                 <ExpensesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/subscriptions"
+            element={
+              <PrivateRoute>
+                <SubscriptionsPage />
               </PrivateRoute>
             }
           />

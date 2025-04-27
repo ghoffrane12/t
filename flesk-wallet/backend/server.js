@@ -6,7 +6,11 @@ const authRoutes = require('./routes/auth');
 const transactionRoutes = require('./routes/transactions');
 const savingGoalsRoutes = require('./routes/savingGoals');
 const budgetRoutes = require('./routes/Budgets');
+const expenseRoutes = require('./routes/expenseRoutes');
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
 require('./models/Budget');
+require('./models/Expense');
+require('./models/Subscription');
 
 const app = express();
 
@@ -17,9 +21,10 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
-
 app.use('/api/saving-goals', savingGoalsRoutes);
 app.use('/api/budgets', budgetRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
  
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flesk-wallet', {

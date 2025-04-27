@@ -11,6 +11,7 @@ import {
   Notifications as NotificationIcon,
   Savings as SavingsIcon,
   Logout as LogoutIcon,
+  Subscriptions as SubscriptionsIcon,
 } from '@mui/icons-material';
 
 const Sidebar = () => {
@@ -22,6 +23,7 @@ const Sidebar = () => {
     { text: 'Transactions', icon: <PaymentIcon />, path: '/transactions' },
     { text: 'Dépenses', icon: <ExpensesIcon />, path: '/expenses' },
     { text: 'Revenus', icon: <RevenuesIcon />, path: '/revenues' },
+    { text: 'Abonnements', icon: <SubscriptionsIcon />, path: '/subscriptions' },
     { text: 'Épargne', icon: <SavingsIcon />, path: '/savings' },
     { text: 'Budgets', icon: <BudgetIcon />, path: '/budgets' },
     { text: 'Localisation', icon: <LocationIcon />, path: '/location' },
