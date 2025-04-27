@@ -30,10 +30,11 @@ const Dashboard: React.FC = () => {
     try {
       setLoading(true);
       const data = await calculateDashboardTotals();
+      console.log('Dashboard data:', data);
       setTotals(data);
     } catch (err) {
       setError('Erreur lors du chargement des données');
-      console.error(err);
+      console.error('Erreur Dashboard:', err);
     } finally {
       setLoading(false);
     }

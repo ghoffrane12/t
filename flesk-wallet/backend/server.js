@@ -8,9 +8,11 @@ const savingGoalsRoutes = require('./routes/savingGoals');
 const budgetRoutes = require('./routes/Budgets');
 const expenseRoutes = require('./routes/expenseRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
+const revenueRoutes = require('./routes/revenueRoutes');
 require('./models/Budget');
 require('./models/Expense');
 require('./models/Subscription');
+require('./models/Revenue');
 
 const app = express();
 
@@ -25,6 +27,7 @@ app.use('/api/saving-goals', savingGoalsRoutes);
 app.use('/api/budgets', budgetRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/revenues', revenueRoutes);
  
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flesk-wallet', {

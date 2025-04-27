@@ -1,5 +1,5 @@
-import { getExpenses } from './expensesService';
-import { getSubscriptions } from './subscriptionsService';
+import { getExpenses, Expense } from './expensesService';
+import { getSubscriptions, Subscription } from './subscriptionsService';
 import { getRevenues, Revenue } from './revenuesService';
 
 export interface DashboardTotals {
@@ -18,12 +18,18 @@ export const calculateDashboardTotals = async (): Promise<DashboardTotals> => {
       getRevenues()
     ]);
 
+    console.log('Données récupérées:', {
+      expenses,
+      subscriptions,
+      revenues
+    });
+
     // Calculer le total des dépenses
     const totalExpenses = expenses
-      .reduce((sum: number, expense) => sum + expense.amount, 0);
+      .reduce((sum: number, expense: Expense) => sum + expense.amount, 0);
 
     // Calculer le total des dépenses par catégorie
-    const expensesByCategory = expenses.reduce((acc: { [key: string]: number }, expense) => {
+    const expensesByCategory = expenses.reduce((acc: { [key: string]: number }, expense: Expense) => {
       const category = expense.category;
       acc[category] = (acc[category] || 0) + expense.amount;
       return acc;
@@ -31,8 +37,8 @@ export const calculateDashboardTotals = async (): Promise<DashboardTotals> => {
 
     // Calculer le total des abonnements actifs
     const totalSubscriptions = subscriptions
-      .filter(subscription => subscription.isActive)
-      .reduce((sum: number, subscription) => sum + subscription.amount, 0);
+      .filter((subscription: Subscription) => subscription.isActive)
+      .reduce((sum: number, subscription: Subscription) => sum + subscription.amount, 0);
 
     // Calculer le total des revenus
     const totalRevenues = revenues
@@ -41,14 +47,18 @@ export const calculateDashboardTotals = async (): Promise<DashboardTotals> => {
     // Calculer le solde total (revenus - (dépenses + abonnements))
     const balance = totalRevenues - (totalExpenses + totalSubscriptions);
 
-    return {
+    const totals = {
       balance,
       totalExpenses,
       totalRevenues,
       totalSubscriptions
     };
+
+    console.log('Totaux calculés:', totals);
+
+    return totals;
   } catch (error) {
-    console.error('Erreur lors du calcul des totaux:', error);
+    console.error('Erreur détaillée lors du calcul des totaux:', error);
     throw error;
   }
 }; 
