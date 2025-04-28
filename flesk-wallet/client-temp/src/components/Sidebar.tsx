@@ -49,7 +49,7 @@ const Sidebar = () => {
         flexDirection: 'column',
       }}
     > 
-    /* aaaaa */
+   
       {/* Logo et titre */}
       <Box
         sx={{

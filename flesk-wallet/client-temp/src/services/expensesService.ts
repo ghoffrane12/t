@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { checkAndUpdateBudget } from './budgetService';
 
 export interface Expense {
   _id?: string;
@@ -33,9 +34,31 @@ export const getExpenses = async (): Promise<Expense[]> => {
   return response.data;
 };
 
-export const createExpense = async (expense: Omit<Expense, '_id' | 'user' | 'createdAt' | 'updatedAt'>): Promise<Expense> => {
-  const response = await axios.post(`${API_URL}/expenses`, expense);
-  return response.data;
+export const createExpense = async (expense: Omit<Expense, '_id' | 'user' | 'createdAt' | 'updatedAt'>): Promise<{
+  expense: Expense;
+  budgetResult: {
+    success: boolean;
+    message: string;
+    shouldCreateBudget?: boolean;
+    budgetAmount?: number;
+  };
+}> => {
+  try {
+    // Créer la dépense
+    const response = await axios.post(`${API_URL}/expenses`, expense);
+    const createdExpense = response.data;
+
+    // Vérifier et mettre à jour le budget
+    const budgetResult = await checkAndUpdateBudget(expense.category, expense.amount);
+
+    return {
+      expense: createdExpense,
+      budgetResult
+    };
+  } catch (error) {
+    console.error('Erreur lors de la création de la dépense:', error);
+    throw error;
+  }
 };
 
 export const updateExpense = async (id: string, expense: Partial<Omit<Expense, '_id' | 'user' | 'createdAt' | 'updatedAt'>>): Promise<Expense> => {
