@@ -209,7 +209,7 @@ const RevenuesPage: React.FC = () => {
               <TableRow key={revenue._id}>
                 <TableCell>{revenue.nom}</TableCell>
                 <TableCell>{revenue.description}</TableCell>
-                <TableCell>{revenue.amount.toFixed(2)} €</TableCell>
+                <TableCell>{revenue.amount.toFixed(2)} DT</TableCell>
                 <TableCell>{revenue.category}</TableCell>
                 <TableCell>{new Date(revenue.date).toLocaleDateString()}</TableCell>
                 <TableCell>

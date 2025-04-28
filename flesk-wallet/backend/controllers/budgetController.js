@@ -164,16 +164,15 @@ exports.deductFromBudget = async (req, res) => {
       });
     }
 
-    // Vérifier si le montant à déduire est disponible
-    if (amount > budget.remainingAmount) {
-      return res.status(400).json({
-        success: false,
-        message: 'Le montant à déduire est supérieur au montant restant'
-      });
+    // Mettre à jour le montant dépensé et le montant restant
+    budget.currentSpending += amount;
+    budget.remainingAmount = Math.max(0, budget.remainingAmount - amount);
+    
+    // Mettre à jour le statut si nécessaire
+    if (budget.remainingAmount === 0) {
+      budget.status = 'COMPLETED';
     }
 
-    // Mettre à jour le montant dépensé
-    budget.currentSpending += amount;
     await budget.save();
 
     res.json({

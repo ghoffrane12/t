@@ -24,6 +24,7 @@ import {
   FormControlLabel,
   Switch,
   Grid,
+  Snackbar,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -32,6 +33,7 @@ import {
 } from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
 import { getExpenses, createExpense, updateExpense, deleteExpense, expenseCategories, Expense } from '../services/expensesService';
+import { createBudget } from '../services/budgetService';
 
 const ExpensesPage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -47,6 +49,30 @@ const ExpensesPage: React.FC = () => {
     amount: 0,
     category: '',
     date: new Date().toISOString().split('T')[0]
+  });
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success' as 'success' | 'error' | 'warning'
+  });
+  const [createBudgetDialog, setCreateBudgetDialog] = useState({
+    open: false,
+    category: '',
+    amount: 0,
+    showForm: false,
+    formData: {
+      name: '',
+      amount: 0,
+      period: 'MONTHLY' as 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY',
+      startDate: new Date().toISOString().split('T')[0],
+      notifications: {
+        enabled: true,
+        threshold: 0.2
+      },
+      description: '',
+      tags: [] as string[]
+    }
   });
 
   useEffect(() => {
@@ -140,6 +166,95 @@ const ExpensesPage: React.FC = () => {
     return new Date(date).toLocaleDateString('fr-FR');
   };
 
+  const handleCreateExpense = async () => {
+    try {
+      const result = await createExpense(newExpense);
+      setExpenses([...expenses, result.expense]);
+      setOpenDialog(false);
+      setNewExpense({
+        nom: '',
+        description: '',
+        amount: 0,
+        category: '',
+        date: new Date().toISOString().split('T')[0]
+      });
+
+      // Gérer le résultat du budget
+      if (result.budgetResult.shouldCreateBudget) {
+        setCreateBudgetDialog({
+          open: true,
+          category: newExpense.category,
+          amount: result.budgetResult.budgetAmount || newExpense.amount,
+          showForm: false,
+          formData: {
+            name: `Budget ${newExpense.category}`,
+            amount: result.budgetResult.budgetAmount || newExpense.amount,
+            period: 'MONTHLY',
+            startDate: new Date().toISOString().split('T')[0],
+            notifications: {
+              enabled: true,
+              threshold: 0.2
+            },
+            description: '',
+            tags: []
+          }
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: result.budgetResult.message,
+          severity: result.budgetResult.success ? 'success' : 'warning'
+        });
+      }
+    } catch (error) {
+      setError('Erreur lors de la création de la dépense');
+      console.error(error);
+    }
+  };
+
+  const handleCreateBudget = async () => {
+    try {
+      await createBudget({
+        name: createBudgetDialog.formData.name || `Budget ${createBudgetDialog.category}`,
+        amount: createBudgetDialog.formData.amount,
+        remainingAmount: createBudgetDialog.formData.amount,
+        category: createBudgetDialog.category,
+        period: createBudgetDialog.formData.period,
+        startDate: createBudgetDialog.formData.startDate,
+        status: 'ACTIVE',
+        notifications: createBudgetDialog.formData.notifications,
+        description: createBudgetDialog.formData.description,
+        tags: createBudgetDialog.formData.tags
+      });
+      setCreateBudgetDialog({ 
+        open: false, 
+        category: '', 
+        amount: 0,
+        showForm: false,
+        formData: {
+          name: '',
+          amount: 0,
+          period: 'MONTHLY',
+          startDate: new Date().toISOString().split('T')[0],
+          notifications: {
+            enabled: true,
+            threshold: 0.2
+          },
+          description: '',
+          tags: []
+        }
+      });
+      setSnackbar({
+        open: true,
+        message: 'Budget créé avec succès',
+        severity: 'success'
+      });
+    } catch (error) {
+      setError('Erreur lors de la création du budget');
+      console.error(error);
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
       <Sidebar />
@@ -225,6 +340,16 @@ const ExpensesPage: React.FC = () => {
         </Box>
       </Box>
 
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+
       <Dialog 
         open={openDialog} 
         onClose={() => {
@@ -298,12 +423,188 @@ const ExpensesPage: React.FC = () => {
             Annuler
           </Button>
           <Button 
-            onClick={isEditing ? handleUpdateExpense : handleAddExpense}
+            onClick={isEditing ? handleUpdateExpense : handleCreateExpense}
             disabled={loading}
             sx={{ bgcolor: '#FF5733', color: 'white', '&:hover': { bgcolor: '#ff6b4a' } }}
           >
             {loading ? <CircularProgress size={24} /> : (isEditing ? 'Modifier' : 'Ajouter')}
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={createBudgetDialog.open}
+        onClose={() => setCreateBudgetDialog({ 
+          open: false, 
+          category: '', 
+          amount: 0,
+          showForm: false,
+          formData: {
+            name: '',
+            amount: 0,
+            period: 'MONTHLY',
+            startDate: new Date().toISOString().split('T')[0],
+            notifications: {
+              enabled: true,
+              threshold: 0.2
+            },
+            description: '',
+            tags: []
+          }
+        })}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          {createBudgetDialog.showForm ? 'Créer un nouveau budget' : 'Budget manquant'}
+        </DialogTitle>
+        <DialogContent>
+          {createBudgetDialog.showForm ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+              <TextField
+                label="Nom du budget"
+                fullWidth
+                value={createBudgetDialog.formData.name}
+                onChange={(e) => setCreateBudgetDialog(prev => ({
+                  ...prev,
+                  formData: { ...prev.formData, name: e.target.value }
+                }))}
+              />
+              <TextField
+                label="Montant"
+                type="number"
+                fullWidth
+                required
+                value={createBudgetDialog.formData.amount}
+                onChange={(e) => setCreateBudgetDialog(prev => ({
+                  ...prev,
+                  formData: { ...prev.formData, amount: Number(e.target.value) }
+                }))}
+                InputProps={{
+                  inputProps: { min: 0, step: "0.01" }
+                }}
+              />
+              <TextField
+                select
+                label="Période"
+                fullWidth
+                value={createBudgetDialog.formData.period}
+                onChange={(e) => setCreateBudgetDialog(prev => ({
+                  ...prev,
+                  formData: { ...prev.formData, period: e.target.value as 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY' }
+                }))}
+              >
+                <MenuItem value="DAILY">Quotidien</MenuItem>
+                <MenuItem value="WEEKLY">Hebdomadaire</MenuItem>
+                <MenuItem value="MONTHLY">Mensuel</MenuItem>
+                <MenuItem value="YEARLY">Annuel</MenuItem>
+              </TextField>
+              <TextField
+                label="Date de début"
+                type="date"
+                fullWidth
+                value={createBudgetDialog.formData.startDate}
+                onChange={(e) => setCreateBudgetDialog(prev => ({
+                  ...prev,
+                  formData: { ...prev.formData, startDate: e.target.value }
+                }))}
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                label="Description"
+                fullWidth
+                multiline
+                rows={2}
+                value={createBudgetDialog.formData.description}
+                onChange={(e) => setCreateBudgetDialog(prev => ({
+                  ...prev,
+                  formData: { ...prev.formData, description: e.target.value }
+                }))}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={createBudgetDialog.formData.notifications.enabled}
+                    onChange={(e) => setCreateBudgetDialog(prev => ({
+                      ...prev,
+                      formData: {
+                        ...prev.formData,
+                        notifications: {
+                          ...prev.formData.notifications,
+                          enabled: e.target.checked
+                        }
+                      }
+                    }))}
+                  />
+                }
+                label="Activer les notifications"
+              />
+              {createBudgetDialog.formData.notifications.enabled && (
+                <TextField
+                  label="Seuil de notification (%)"
+                  type="number"
+                  fullWidth
+                  value={createBudgetDialog.formData.notifications.threshold * 100}
+                  onChange={(e) => setCreateBudgetDialog(prev => ({
+                    ...prev,
+                    formData: {
+                      ...prev.formData,
+                      notifications: {
+                        ...prev.formData.notifications,
+                        threshold: Number(e.target.value) / 100
+                      }
+                    }
+                  }))}
+                  InputProps={{
+                    inputProps: { min: 0, max: 100, step: "1" }
+                  }}
+                />
+              )}
+            </Box>
+          ) : (
+            <Typography>
+              Voulez-vous créer un budget de  pour la catégorie {createBudgetDialog.category} ?
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCreateBudgetDialog({ 
+            open: false, 
+            category: '', 
+            amount: 0,
+            showForm: false,
+            formData: {
+              name: '',
+              amount: 0,
+              period: 'MONTHLY',
+              startDate: new Date().toISOString().split('T')[0],
+              notifications: {
+                enabled: true,
+                threshold: 0.2
+              },
+              description: '',
+              tags: []
+            }
+          })}>
+            Annuler
+          </Button>
+          {!createBudgetDialog.showForm ? (
+            <Button 
+              onClick={() => setCreateBudgetDialog(prev => ({ ...prev, showForm: true }))}
+              variant="contained" 
+              color="primary"
+            >
+              Créer le budget
+            </Button>
+          ) : (
+            <Button 
+              onClick={handleCreateBudget} 
+              variant="contained" 
+              color="primary"
+            >
+              Confirmer
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </Box>
