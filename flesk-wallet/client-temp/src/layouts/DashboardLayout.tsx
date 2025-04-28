@@ -100,25 +100,18 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          bgcolor: 'background.default',
+          width: '100%',
+          bgcolor: 'primary.main',
           boxShadow: 'none',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
+          <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+            FLESK WALLET
+          </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0 }}>
-            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+            <Avatar sx={{ bgcolor: 'white', color: 'primary.main' }}>
               {user?.firstName?.[0]?.toUpperCase() || 'U'}
             </Avatar>
           </IconButton>
