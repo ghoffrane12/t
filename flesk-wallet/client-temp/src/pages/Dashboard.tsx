@@ -16,14 +16,19 @@ import {
 } from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
+import ExpensePieChart from '../components/Charts/ExpensePieChart';
+import { getExpenses, Expense } from '../services/expensesService';
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [pieData, setPieData] = useState<{ category: string; amount: number }[]>([]);
 
   useEffect(() => {
     fetchDashboardData();
+    fetchExpenses();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -37,6 +42,26 @@ const Dashboard: React.FC = () => {
       console.error('Erreur Dashboard:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchExpenses = async () => {
+    try {
+      const data = await getExpenses();
+      setExpenses(data);
+      // Regrouper par catégorie
+      const byCategory: { [key: string]: number } = {};
+      data.forEach(exp => {
+        byCategory[exp.category] = (byCategory[exp.category] || 0) + exp.amount;
+      });
+      setPieData(
+        Object.entries(byCategory).map(([category, amount]) => ({
+          category,
+          amount,
+        }))
+      );
+    } catch (err) {
+      // Optionnel: gestion d'erreur
     }
   };
 
@@ -170,6 +195,10 @@ const Dashboard: React.FC = () => {
                     {totals ? formatAmount(totals.totalSubscriptions) : '0 DT'}
                   </Typography>
                 </Paper>
+              </Box>
+              {/* Diagramme circulaire des dépenses par catégorie */}
+              <Box sx={{ mt: 4 }}>
+                <ExpensePieChart data={pieData} />
               </Box>
             </Box>
           )}
