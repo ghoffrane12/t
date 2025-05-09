@@ -13,7 +13,6 @@ import {
   Logout as LogoutIcon,
   Subscriptions as SubscriptionsIcon,
 } from '@mui/icons-material';
-
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();

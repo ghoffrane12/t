@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const { faker } = require('@faker-js/faker');
 const User = require('../models/User');  // Modèle User
 const Expense = require('../models/Expense');  // Modèle Expense
@@ -18,13 +19,18 @@ mongoose.connect('mongodb://localhost:27017/flesk-wallet', {
 // Générer des utilisateurs
 async function generateUsers(numUsers) {
   for (let i = 0; i < numUsers; i++) {
+    const plainPassword = faker.internet.password();  // mot de passe généré
+    const hashedPassword = await bcrypt.hash(plainPassword, 10);  // hashé
+
     const user = new User({
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password: hashedPassword,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     });
+
     await user.save();
+    console.log(`Utilisateur généré : ${user.email} | Mot de passe : ${plainPassword}`);
   }
   console.log(`${numUsers} utilisateurs générés.`);
 }
@@ -85,8 +91,17 @@ async function generateTransactions(numTransactions) {
   console.log(`${numTransactions} transactions générées.`);
 }
 
+/*async function clearDatabase() {
+  await User.deleteMany({});
+  await Expense.deleteMany({});
+  await Revenue.deleteMany({});
+  await Transaction.deleteMany({});
+  console.log("Toutes les données existantes ont été supprimées.");
+}*/
+
 // Fonction pour exécuter la génération de données
 async function generateData() {
+  //await clearDatabase();  // Supprime les anciennes données
   await generateUsers(100);  // Génère 100 utilisateurs
   await generateExpenses(500);  // Génère 500 dépenses
   await generateRevenues(300);  // Génère 300 revenus

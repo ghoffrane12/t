@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  AppBar,
-  Toolbar,
   Paper,
   CircularProgress,
   Alert,
+  AppBar,
+  Toolbar
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
@@ -14,8 +14,8 @@ import {
   Subscriptions as SubscriptionsIcon,
   AccountBalance as BalanceIcon,
 } from '@mui/icons-material';
-import Sidebar from '../components/Sidebar';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
+import Sidebar from '../components/Sidebar';
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
@@ -30,19 +30,17 @@ const Dashboard: React.FC = () => {
     try {
       setLoading(true);
       const data = await calculateDashboardTotals();
-      console.log('Dashboard data:', data);
       setTotals(data);
     } catch (err) {
       setError('Erreur lors du chargement des données');
-      console.error('Erreur Dashboard:', err);
     } finally {
       setLoading(false);
     }
   };
 
   const formatAmount = (amount: number) => {
-    return amount.toLocaleString('fr-FR', { 
-      style: 'currency', 
+    return amount.toLocaleString('fr-FR', {
+      style: 'currency',
       currency: 'TND',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -179,4 +177,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
