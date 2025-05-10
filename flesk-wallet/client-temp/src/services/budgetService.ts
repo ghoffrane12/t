@@ -1,4 +1,5 @@
 import api from '../config/api';
+import axios from 'axios';
 
 export interface Budget {
   id: string;
@@ -18,6 +19,22 @@ export interface Budget {
   tags: string[];
 }
 
+export type BudgetCreatePayload = {
+  name: string;
+  amount: number;
+  category: string;
+  period: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  startDate: string;
+  endDate?: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'COMPLETED';
+  notifications: {
+    enabled: boolean;
+    threshold: number;
+  };
+  description?: string;
+  tags: string[];
+};
+
 // Récupérer tous les budgets
 export const getBudgets = async (): Promise<Budget[]> => {
   try {
@@ -34,7 +51,7 @@ export const getBudgets = async (): Promise<Budget[]> => {
 };
 
 // Créer un nouveau budget
-export const createBudget = async (budgetData: Omit<Budget, 'id'>): Promise<Budget> => {
+export const createBudget = async (budgetData: BudgetCreatePayload): Promise<Budget> => {
   try {
     const response = await api.post('/budgets', budgetData);
     const createdBudget = response.data.data;
@@ -87,6 +104,19 @@ export const deleteBudget = async (id: string): Promise<void> => {
     await api.delete(`/budgets/${id}`);
   } catch (error) {
     console.error('Erreur lors de la suppression du budget:', error);
+    throw error;
+  }
+};
+
+// Vérifier l'existence d'un budget pour une catégorie
+export const getBudgetByCategory = async (category: string): Promise<Budget | null> => {
+  try {
+    const response = await api.get(`/budgets/category/${category}`);
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
     throw error;
   }
 }; 

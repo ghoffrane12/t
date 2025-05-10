@@ -188,3 +188,32 @@ exports.deductFromBudget = async (req, res) => {
     });
   }
 };
+
+// Obtenir le budget actif pour une catégorie donnée
+exports.getBudgetByCategory = async (req, res) => {
+  try {
+    const budget = await Budget.findOne({
+      userId: req.user.id,
+      category: req.params.category,
+      status: 'ACTIVE'
+    });
+
+    if (!budget) {
+      return res.status(404).json({
+        success: false,
+        message: 'Aucun budget trouvé pour cette catégorie'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: budget
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la recherche du budget',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Une erreur est survenue'
+    });
+  }
+};

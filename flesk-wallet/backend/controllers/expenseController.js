@@ -1,4 +1,5 @@
 const Expense = require('../models/Expense');
+const Budget = require('../models/Budget');
 
 // Créer une nouvelle dépense
 exports.createExpense = async (req, res) => {
@@ -7,6 +8,21 @@ exports.createExpense = async (req, res) => {
             ...req.body,
             user: req.user._id
         });
+
+        // Mettre à jour le budget associé (le montant peut devenir négatif)
+        const budget = await Budget.findOne({
+            userId: req.user._id,
+            category: expense.category,
+            status: 'ACTIVE'
+        });
+        if (budget) {
+            budget.currentSpending += expense.amount;
+            if (typeof budget.remainingAmount === 'number') {
+                budget.remainingAmount -= expense.amount;
+            }
+            await budget.save();
+        }
+
         await expense.save();
         res.status(201).json(expense);
     } catch (error) {
