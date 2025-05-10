@@ -5,8 +5,12 @@ import {
   Paper,
   CircularProgress,
   Alert,
+<<<<<<< HEAD
   AppBar,
   Toolbar
+=======
+  Grid,
+>>>>>>> c2468b0d99659ee4b56571a9b8c392291416d74e
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
@@ -15,15 +19,24 @@ import {
   AccountBalance as BalanceIcon,
 } from '@mui/icons-material';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
+<<<<<<< HEAD
 import Sidebar from '../components/Sidebar';
+=======
+import ExpensePieChart from '../components/Charts/ExpensePieChart';
+import { getExpenses, Expense } from '../services/expensesService';
+import ExpenseIncomeChart from '../components/ExpenseIncomeChart';
+>>>>>>> c2468b0d99659ee4b56571a9b8c392291416d74e
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [pieData, setPieData] = useState<{ category: string; amount: number }[]>([]);
 
   useEffect(() => {
     fetchDashboardData();
+    fetchExpenses();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -35,6 +48,26 @@ const Dashboard: React.FC = () => {
       setError('Erreur lors du chargement des données');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchExpenses = async () => {
+    try {
+      const data = await getExpenses();
+      setExpenses(data);
+      // Regrouper par catégorie
+      const byCategory: { [key: string]: number } = {};
+      data.forEach(exp => {
+        byCategory[exp.category] = (byCategory[exp.category] || 0) + exp.amount;
+      });
+      setPieData(
+        Object.entries(byCategory).map(([category, amount]) => ({
+          category,
+          amount,
+        }))
+      );
+    } catch (err) {
+      // Optionnel: gestion d'erreur
     }
   };
 
@@ -169,6 +202,14 @@ const Dashboard: React.FC = () => {
                   </Typography>
                 </Paper>
               </Box>
+              {/* Diagramme circulaire des dépenses par catégorie */}
+              <Box sx={{ mt: 4 }}>
+                <ExpensePieChart data={pieData} />
+              </Box>
+
+              <Grid item xs={12}>
+                <ExpenseIncomeChart />
+              </Grid>
             </Box>
           )}
         </Box>

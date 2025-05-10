@@ -16,6 +16,7 @@ const ExpensesPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const handlePredict = async () => {
+    console.log('Bouton Prédire cliqué');
     try {
       setLoading(true);
       const response = await axios.get('http://localhost:5000/api/predictions/predict');

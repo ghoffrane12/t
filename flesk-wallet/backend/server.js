@@ -1,49 +1,41 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+// Routes
 const authRoutes = require('./routes/auth');
-const transactionRoutes = require('./routes/transactions');
-const savingGoalsRoutes = require('./routes/savingGoals');
-const budgetRoutes = require('./routes/Budgets');
 const expenseRoutes = require('./routes/expenseRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const revenueRoutes = require('./routes/revenueRoutes');
-require('./models/Budget');
-require('./models/Expense');
-require('./models/Subscription');
-require('./models/Revenue');
+const predictionRoutes = require('./routes/predictions');
+
+dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary methods
+  allowedHeaders: ['Content-Type', 'Authorization'] // Allow necessary headers
+}));
 app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/transactions', transactionRoutes);
-app.use('/api/saving-goals', savingGoalsRoutes);
-app.use('/api/budgets', budgetRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/revenues', revenueRoutes);
- 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flesk-wallet', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Connecté à MongoDB'))
-.catch(err => console.error('Erreur de connexion à MongoDB:', err));
+app.use('/api/predictions', predictionRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Une erreur est survenue sur le serveur' });
-});
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flesk-wallet')
+    .then(() => console.log('Connecté à MongoDB'))
+    .catch(err => console.error('Erreur de connexion à MongoDB:', err));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
-});
+    console.log(`Serveur démarré sur le port ${PORT}`);
+}); 
