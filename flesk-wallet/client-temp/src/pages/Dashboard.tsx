@@ -7,6 +7,7 @@ import {
   Paper,
   CircularProgress,
   Alert,
+  Grid,
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
@@ -18,6 +19,7 @@ import Sidebar from '../components/Sidebar';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
 import ExpensePieChart from '../components/Charts/ExpensePieChart';
 import { getExpenses, Expense } from '../services/expensesService';
+import ExpenseIncomeChart from '../components/ExpenseIncomeChart';
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
@@ -200,6 +202,10 @@ const Dashboard: React.FC = () => {
               <Box sx={{ mt: 4 }}>
                 <ExpensePieChart data={pieData} />
               </Box>
+
+              <Grid item xs={12}>
+                <ExpenseIncomeChart />
+              </Grid>
             </Box>
           )}
         </Box>
