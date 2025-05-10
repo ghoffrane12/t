@@ -14,6 +14,30 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          width: 250, // Largeur fixe pour le menu
+          backgroundColor: '#1A1A1A', // Couleur de fond sombre
+          color: '#FFFFFF', // Couleur du texte
+          borderRight: 'none', // Supprime la bordure
+        },
+      },
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          margin: '4px 8px',
+          '&:hover': {
+            backgroundColor: 'rgba(255, 87, 51, 0.1)', // Effet hover discret
+          },
+          '&.Mui-selected': {
+            backgroundColor: 'rgba(255, 87, 51, 0.2)', // Couleur quand sélectionné
+          },
+        },
+      },
+    },
     MuiTextField: {
       styleOverrides: {
         root: {

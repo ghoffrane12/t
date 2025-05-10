@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  AppBar,
-  Toolbar,
   Paper,
   CircularProgress,
   Alert,
+<<<<<<< HEAD
+  AppBar,
+  Toolbar
+=======
   Grid,
+>>>>>>> c2468b0d99659ee4b56571a9b8c392291416d74e
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
@@ -15,11 +18,14 @@ import {
   Subscriptions as SubscriptionsIcon,
   AccountBalance as BalanceIcon,
 } from '@mui/icons-material';
-import Sidebar from '../components/Sidebar';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
+<<<<<<< HEAD
+import Sidebar from '../components/Sidebar';
+=======
 import ExpensePieChart from '../components/Charts/ExpensePieChart';
 import { getExpenses, Expense } from '../services/expensesService';
 import ExpenseIncomeChart from '../components/ExpenseIncomeChart';
+>>>>>>> c2468b0d99659ee4b56571a9b8c392291416d74e
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
@@ -37,11 +43,9 @@ const Dashboard: React.FC = () => {
     try {
       setLoading(true);
       const data = await calculateDashboardTotals();
-      console.log('Dashboard data:', data);
       setTotals(data);
     } catch (err) {
       setError('Erreur lors du chargement des données');
-      console.error('Erreur Dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -68,8 +72,8 @@ const Dashboard: React.FC = () => {
   };
 
   const formatAmount = (amount: number) => {
-    return amount.toLocaleString('fr-FR', { 
-      style: 'currency', 
+    return amount.toLocaleString('fr-FR', {
+      style: 'currency',
       currency: 'TND',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -214,4 +218,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;

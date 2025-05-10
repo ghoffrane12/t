@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Drawer,
@@ -14,6 +14,7 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Badge,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -24,9 +25,11 @@ import {
   Settings as SettingsIcon,
   Person as PersonIcon,
   Logout as LogoutIcon,
+  Notifications as NotificationsIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, logout } from '../services/authService';
+console.log(">>> DashboardLayout.tsx modifié");
 
 const drawerWidth = 240;
 
@@ -40,6 +43,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const user = getCurrentUser();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -53,10 +57,24 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     setAnchorEl(null);
   };
 
+  const handleNotificationsClick = () => {
+    navigate('/notifications');
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  // Simulation de chargement des notifications
+  useEffect(() => {
+    // À remplacer par un appel API réel
+    const fetchNotifications = async () => {
+      // Exemple: const count = await notificationService.getUnreadCount();
+      setNotificationCount(3); // Valeur temporaire
+    };
+    fetchNotifications();
+  }, []);
 
   const menuItems = [
     { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/dashboard' },
@@ -100,11 +118,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          bgcolor: 'background.default',
+          width: '100%',
+          bgcolor: 'primary.main',
           boxShadow: 'none',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+          zIndex: theme.zIndex.drawer + 1,
         }}
       >
         <Toolbar>
@@ -116,9 +133,53 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              color: 'white', 
+              fontWeight: 'bold',
+              cursor: 'pointer',
+            }}
+            onClick={() => navigate('/dashboard')}
+          >
+            FLESK WALLET
+          </Typography>
           <Box sx={{ flexGrow: 1 }} />
+          
+          {/* Icône de notifications */}
+          <IconButton
+            size="large"
+            aria-label="show notifications"
+            color="inherit"
+            onClick={handleNotificationsClick}
+            sx={{
+              mr: 2,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              },
+            }}
+          >
+            <Badge
+              badgeContent={notificationCount}
+              color="error"
+              max={9}
+              sx={{
+                '& .MuiBadge-badge': {
+                  right: -3,
+                  top: 5,
+                  border: '2px solid',
+                  borderColor: 'primary.main',
+                  padding: '0 4px',
+                },
+              }}
+            >
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          
+          {/* Avatar utilisateur */}
           <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0 }}>
-            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+            <Avatar sx={{ bgcolor: 'white', color: 'primary.main' }}>
               {user?.firstName?.[0]?.toUpperCase() || 'U'}
             </Avatar>
           </IconButton>
@@ -186,14 +247,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           sx: {
             bgcolor: 'background.default',
             border: '1px solid rgba(255, 255, 255, 0.12)',
+            minWidth: 180,
           },
         }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={() => navigate('/profile')}>
           <ListItemIcon>
             <PersonIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Profile</ListItemText>
+          <ListItemText>Profil</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
@@ -206,4 +270,4 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   );
 };
 
-export default DashboardLayout; 
+export default DashboardLayout;

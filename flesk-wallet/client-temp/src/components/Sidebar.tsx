@@ -13,7 +13,6 @@ import {
   Logout as LogoutIcon,
   Subscriptions as SubscriptionsIcon,
 } from '@mui/icons-material';
-
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,8 +47,7 @@ const Sidebar = () => {
         display: 'flex',
         flexDirection: 'column',
       }}
-    > 
-   
+    >
       {/* Logo et titre */}
       <Box
         sx={{
