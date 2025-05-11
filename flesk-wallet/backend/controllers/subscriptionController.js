@@ -1,5 +1,6 @@
 const Subscription = require('../models/Subscription');
 const Expense = require('../models/Expense');
+const { createPaymentReminderNotification } = require('../services/notificationService');
 
 // Créer un nouvel abonnement et sa première dépense
 exports.createSubscription = async (req, res) => {
@@ -170,5 +171,27 @@ exports.syncSubscriptions = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+// Vérifier les abonnements à renouveler (à exécuter quotidiennement via un cron job)
+exports.checkRenewalSubscriptions = async () => {
+    try {
+        const today = new Date();
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+
+        const subscriptionsToRenew = await Subscription.find({
+            nextPaymentDate: {
+                $gte: today,
+                $lte: nextWeek
+            }
+        });
+
+        for (const subscription of subscriptionsToRenew) {
+            await createPaymentReminderNotification(subscription.user, subscription);
+        }
+    } catch (error) {
+        console.error('Erreur lors de la vérification des abonnements à renouveler:', error);
     }
 }; 

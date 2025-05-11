@@ -23,22 +23,46 @@ import { fr } from 'date-fns/locale';
 import { getExpenses, Expense } from '../services/expensesService';
 import { getRevenues, Revenue } from '../services/revenuesService';
 
+/**
+ * Interface pour les données du graphique
+ * @interface ChartData
+ * @property {string} month - Le mois formaté
+ * @property {number} expenses - Le montant total des dépenses
+ * @property {number} income - Le montant total des revenus
+ */
 interface ChartData {
   month: string;
   expenses: number;
   income: number;
 }
 
+/**
+ * Interface pour les réponses de l'API
+ * @interface ApiResponse
+ * @property {boolean} success - Indique si la requête a réussi
+ * @property {T} data - Les données de la réponse
+ */
 interface ApiResponse<T> {
   success: boolean;
   data: T;
 }
 
+/**
+ * Composant ExpenseIncomeChart
+ * 
+ * Un graphique qui affiche l'évolution des dépenses et des revenus sur une période donnée.
+ * Permet de sélectionner différentes périodes (1, 2, 3 ou 6 mois).
+ * Utilise Recharts pour le rendu du graphique.
+ */
 const ExpenseIncomeChart: React.FC = () => {
   const [timeRange, setTimeRange] = useState<number>(1);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  /**
+   * Récupère et prépare les données pour le graphique
+   * Combine les données des dépenses et des revenus par mois
+   */
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -100,6 +124,10 @@ const ExpenseIncomeChart: React.FC = () => {
     fetchData();
   }, [timeRange]);
 
+  /**
+   * Gère le changement de période d'affichage
+   * @param {SelectChangeEvent<number>} event - L'événement de changement de sélection
+   */
   const handleTimeRangeChange = (event: SelectChangeEvent<number>) => {
     setTimeRange(event.target.value as number);
   };

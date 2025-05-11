@@ -1,11 +1,26 @@
 import React from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 
+/**
+ * Interface des propriétés du composant PageHeader
+ * @interface PageHeaderProps
+ * @property {string} title - Le texte du titre à afficher dans l'en-tête
+ * @property {React.ReactNode} [icon] - Icône optionnelle à afficher à côté du titre
+ */
 interface PageHeaderProps {
   title: string;
   icon?: React.ReactNode;
 }
 
+/**
+ * Composant PageHeader
+ * 
+ * Un composant d'en-tête réutilisable qui affiche un titre et une icône optionnelle.
+ * Utilisé en haut des pages pour fournir des en-têtes cohérents dans toute l'application.
+ * 
+ * @param {PageHeaderProps} props - Les propriétés du composant
+ * @returns {JSX.Element} Un en-tête stylisé avec titre et icône optionnelle
+ */
 const PageHeader: React.FC<PageHeaderProps> = ({ title, icon }) => {
   return (
     <Paper 

@@ -1,5 +1,6 @@
 const Expense = require('../models/Expense');
 const Budget = require('../models/Budget');
+const { createBudgetExceededNotification } = require('../services/notificationService');
 
 // Créer une nouvelle dépense
 exports.createExpense = async (req, res) => {
@@ -21,6 +22,11 @@ exports.createExpense = async (req, res) => {
                 budget.remainingAmount -= expense.amount;
             }
             await budget.save();
+
+            // Vérifier si le budget est dépassé et créer une notification
+            if (budget.currentSpending > budget.amount) {
+                await createBudgetExceededNotification(req.user._id, budget);
+            }
         }
 
         await expense.save();

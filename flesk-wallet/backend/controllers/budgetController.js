@@ -1,4 +1,5 @@
 const Budget = require('../models/Budget');
+const { createBudgetExceededNotification } = require('../services/notificationService');
 
 // Obtenir tous les budgets
 exports.getBudgets = async (req, res) => {
@@ -174,6 +175,13 @@ exports.deductFromBudget = async (req, res) => {
 
     // Mettre à jour le montant dépensé
     budget.currentSpending += amount;
+    budget.remainingAmount -= amount;
+
+    // Vérifier si le budget est dépassé (plus de 90% utilisé)
+    if (budget.currentSpending / budget.amount >= 0.9) {
+      await createBudgetExceededNotification(req.user.id, budget);
+    }
+
     await budget.save();
 
     res.json({

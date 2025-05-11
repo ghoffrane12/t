@@ -27,13 +27,28 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, logout } from '../services/authService';
+import NotificationBell from '../components/NotificationBell';
 
 const drawerWidth = 240;
 
+/**
+ * Props interface for the DashboardLayout component
+ * @interface DashboardLayoutProps
+ * @property {React.ReactNode} children - The child components to be rendered within the layout
+ */
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
+/**
+ * DashboardLayout Component
+ * 
+ * A responsive layout component that provides the main structure for the dashboard.
+ * It includes a sidebar navigation, top app bar with user profile, and notification system.
+ * 
+ * @param {DashboardLayoutProps} props - The component props
+ * @returns {JSX.Element} The rendered dashboard layout
+ */
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -41,23 +56,42 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  /**
+   * Toggles the mobile drawer open/closed state
+   * Used for responsive navigation on mobile devices
+   */
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  /**
+   * Opens the profile menu when clicking on the avatar
+   * @param {React.MouseEvent<HTMLElement>} event - The click event
+   */
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  /**
+   * Closes the profile menu
+   */
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
   };
 
+  /**
+   * Handles user logout
+   * Logs out the user and redirects to the login page
+   */
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
+  /**
+   * Navigation menu items configuration
+   * Defines the structure and properties of each menu item in the sidebar
+   */
   const menuItems = [
     { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Comptes', icon: <AccountBalanceIcon />, path: '/accounts' },
@@ -66,6 +100,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     { text: 'Paramètres', icon: <SettingsIcon />, path: '/settings' },
   ];
 
+  /**
+   * Renders the sidebar drawer content
+   * Includes the app logo and navigation menu items
+   */
   const drawer = (
     <Box>
       <Toolbar>
@@ -117,7 +155,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <MenuIcon />
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
-          <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0 }}>
+          <NotificationBell />
+          <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0, ml: 2 }}>
             <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
               {user?.firstName?.[0]?.toUpperCase() || 'U'}
             </Avatar>

@@ -8,18 +8,30 @@ import {
   CircularProgress,
   Alert,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemText,
+  Button
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
   TrendingUp as RevenuesIcon,
   Subscriptions as SubscriptionsIcon,
   AccountBalance as BalanceIcon,
+  Notifications as NotificationsIcon
 } from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
 import ExpensePieChart from '../components/Charts/ExpensePieChart';
 import { getExpenses, Expense } from '../services/expensesService';
 import ExpenseIncomeChart from '../components/ExpenseIncomeChart';
+import { useNavigate } from 'react-router-dom';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import ErrorIcon from '@mui/icons-material/Error';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import NotificationBell from '../components/NotificationBell';
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
@@ -27,6 +39,13 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [pieData, setPieData] = useState<{ category: string; amount: number }[]>([]);
+
+  
+ 
+   
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardData();
@@ -76,14 +95,24 @@ const Dashboard: React.FC = () => {
     });
   };
 
+  const getNotifIcon = (type: string) => {
+    switch (type) {
+      case 'objectif_atteint': return <EmojiEventsIcon color="success" sx={{ mr: 1 }} />;
+      case 'depassement': return <ErrorIcon color="error" sx={{ mr: 1 }} />;
+      case 'abonnement': return <AutorenewIcon color="primary" sx={{ mr: 1 }} />;
+      default: return <NotificationsActiveIcon sx={{ mr: 1 }} />;
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
       <Sidebar />
       
       <Box component="main" sx={{ flexGrow: 1, ml: '280px' }}>
-        {/* Barre orange supérieure */}
         <AppBar position="static" sx={{ bgcolor: '#FF5733', boxShadow: 'none' }}>
-          <Toolbar sx={{ minHeight: '64px !important' }} />
+          <Toolbar sx={{ minHeight: '64px !important', display: 'flex', justifyContent: 'flex-end' }}>
+            <NotificationBell />
+          </Toolbar>
         </AppBar>
 
         {/* Titre de la page */}

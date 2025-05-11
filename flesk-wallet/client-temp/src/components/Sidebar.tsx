@@ -14,10 +14,21 @@ import {
   Subscriptions as SubscriptionsIcon,
 } from '@mui/icons-material';
 
+/**
+ * Composant Sidebar
+ * 
+ * Barre latérale de navigation principale de l'application.
+ * Contient le logo, les liens de navigation et le bouton de déconnexion.
+ * Utilise Material-UI pour le style et la mise en page.
+ */
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /**
+   * Configuration des éléments du menu de navigation
+   * Chaque élément contient un texte, une icône et un chemin de navigation
+   */
   const menuItems = [
     { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Transactions', icon: <PaymentIcon />, path: '/transactions' },
@@ -30,6 +41,10 @@ const Sidebar = () => {
     { text: 'Notification', icon: <NotificationIcon />, path: '/notifications' },
   ];
 
+  /**
+   * Gère la déconnexion de l'utilisateur
+   * Redirige vers la page de connexion
+   */
   const handleLogout = () => {
     // Ici vous pouvez ajouter la logique de déconnexion
     navigate('/login');
@@ -49,7 +64,7 @@ const Sidebar = () => {
         flexDirection: 'column',
       }}
     >
-      {/* Logo et titre */}
+      {/* Section du logo et du titre */}
       <Box
         sx={{
           p: 3,
@@ -87,7 +102,7 @@ const Sidebar = () => {
         </Typography>
       </Box>
 
-      {/* Menu items */}
+      {/* Liste des éléments du menu */}
       <List sx={{ px: 2, flex: 1 }}>
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
@@ -130,7 +145,7 @@ const Sidebar = () => {
         })}
       </List>
 
-      {/* Bouton de déconnexion */}
+      {/* Section du bouton de déconnexion */}
       <Box sx={{ p: 2 }}>
         <Button
           fullWidth
