@@ -24,7 +24,7 @@ import {
 import Sidebar from '../components/Sidebar';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
 import ExpensePieChart from '../components/Charts/ExpensePieChart';
-import { getExpenses, Expense } from '../services/expensesService';
+import { getExpenses } from '../services/expensesService';
 import ExpenseIncomeChart from '../components/ExpenseIncomeChart';
 import { useNavigate } from 'react-router-dom';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -32,17 +32,23 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ErrorIcon from '@mui/icons-material/Error';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import NotificationBell from '../components/NotificationBell';
+import SavingGoalsSummary from '../components/SavingGoalsSummary';
+import RecentTransactionsTable from '../components/RecentTransactionsTable';
+import { getSavingsGoals, SavingsGoal } from '../services/savingsService';
+import { getRecentTransactions, Transaction } from '../services/transactionService';
+import { getRevenues } from '../services/revenuesService';
+import BudgetSummary from '../components/BudgetSummary';
+import { getBudgets, Budget } from '../services/budgetService';
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [pieData, setPieData] = useState<{ category: string; amount: number }[]>([]);
+  const [goals, setGoals] = useState<SavingsGoal[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
 
-  
- 
-   
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -50,6 +56,35 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     fetchDashboardData();
     fetchExpenses();
+    getSavingsGoals().then(setGoals);
+    getBudgets().then(setBudgets);
+    // Fusionne les 6 dernières opérations (dépenses + revenus)
+    const fetchTransactions = async () => {
+      const expenses = (await getExpenses()).map(e => ({
+        id: e._id ?? '',
+        category: e.category,
+        date: e.date,
+        description: e.description,
+        amount: e.amount,
+        currency: 'TND',
+        type: 'dépense' as const
+      }));
+      const revenues = (await getRevenues()).map(r => ({
+        id: r._id ?? '',
+        category: r.category,
+        date: r.date,
+        description: r.description,
+        amount: r.amount,
+        currency: 'TND',
+        type: 'revenu' as const
+      }));
+      const all = [...expenses, ...revenues]
+        .filter(t => !!t.id)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 6);
+      setTransactions(all);
+    };
+    fetchTransactions();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -69,7 +104,6 @@ const Dashboard: React.FC = () => {
   const fetchExpenses = async () => {
     try {
       const data = await getExpenses();
-      setExpenses(data);
       // Regrouper par catégorie
       const byCategory: { [key: string]: number } = {};
       data.forEach(exp => {
@@ -103,6 +137,22 @@ const Dashboard: React.FC = () => {
       default: return <NotificationsActiveIcon sx={{ mr: 1 }} />;
     }
   };
+
+  const colorMap: Record<string, string> = {
+    'Voyage': '#4285f4',
+    'Voiture': '#34a853',
+    'Technologie': '#fbbc05',
+    'Maison': '#ea4335',
+    'Éducation': '#6c63ff',
+    // Ajoute d'autres catégories ici
+  };
+
+  const mappedGoals = goals.map(goal => ({
+    id: goal.id,
+    label: goal.category,
+    percent: goal.targetAmount > 0 ? Math.round((goal.currentAmount / goal.targetAmount) * 100) : 0,
+    color: colorMap[goal.category] || '#636e72'
+  }));
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
@@ -227,14 +277,29 @@ const Dashboard: React.FC = () => {
                   </Typography>
                 </Paper>
               </Box>
-              {/* Diagramme circulaire des dépenses par catégorie */}
-              <Box sx={{ mt: 4 }}>
-                <ExpensePieChart data={pieData} />
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, alignItems: 'stretch', mb: 4 }}>
+                <Box sx={{ flex: 1, minWidth: 320 }}>
+                  <BudgetSummary budgets={budgets} />
+                </Box>
+                <Box sx={{ flex: 2, minWidth: 320 }}>
+                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, color: '#2d3a66', fontSize: 22 }}>
+                    Répartition des Dépenses par Catégorie
+                  </Typography>
+                  <ExpensePieChart data={pieData} />
+                </Box>
               </Box>
-
               <Grid item xs={12}>
                 <ExpenseIncomeChart />
               </Grid>
+
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                <Box sx={{ flex: 1 }}>
+                  <SavingGoalsSummary goals={mappedGoals} />
+                </Box>
+                <Box sx={{ flex: 2 }}>
+                  <RecentTransactionsTable transactions={transactions} />
+                </Box>
+              </Box>
             </Box>
           )}
         </Box>
