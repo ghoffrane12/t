@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Divider, Button, Select, MenuItem, FormControl, InputLabel, Switch, FormControlLabel } from '@mui/material';
+import { Box, Typography, Divider, Button, Select, MenuItem, FormControl, InputLabel, Switch, FormControlLabel, AppBar } from '@mui/material';
 import Sidebar from '../components/Sidebar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EuroIcon from '@mui/icons-material/Euro';
@@ -60,7 +60,16 @@ const SettingsPage: React.FC = () => {
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
       <Sidebar />
       <Box sx={{ flexGrow: 1, ml: '280px' }}>
-        <Box sx={{ height: 48, bgcolor: '#FF5733', borderRadius: '0 0 10px 10px' }} />
+        <AppBar position="static" sx={{ 
+          bgcolor: '#F0F3F4', 
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+          borderBottom: '2px solid rgba(200, 200, 200, 0.8)',
+          borderRadius: 0
+        }}>
+          <Typography variant="h6" sx={{ color: '#000', fontWeight: 700, p: 4 }}>
+            
+          </Typography>
+        </AppBar>
         <Box sx={{ p: 4, maxWidth: 700 }}>
           <Typography variant="h4" sx={{ color: '#000', fontWeight: 700, mb: 4 }}>
             Paramètres

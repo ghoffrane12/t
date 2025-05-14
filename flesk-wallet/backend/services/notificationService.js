@@ -1,8 +1,22 @@
 const Notification = require('../models/Notification');
 
 // Créer une notification
-const createNotification = async (userId, type, title, message, category = null, location = null) => {
+const createNotification = async (userId, type, title, message, category = null, location = null, goalId = null) => {
   try {
+    // Vérifier si une notification identique existe déjà (pour un objectif, on vérifie aussi goalId)
+    const exists = await Notification.findOne({
+      userId,
+      type,
+      title,
+      message,
+      category,
+      location,
+      goalId
+    });
+    if (exists) {
+      return exists; // Ne crée pas de doublon
+    }
+
     const notification = new Notification({
       userId,
       type,
@@ -10,6 +24,7 @@ const createNotification = async (userId, type, title, message, category = null,
       message,
       category,
       location,
+      goalId,
       read: false
     });
     await notification.save();
@@ -74,7 +89,7 @@ const createGoalReminderNotification = async (userId, goal) => {
 const createGoalFailedNotification = async (userId, goal) => {
   const title = 'Objectif non atteint';
   const message = `Votre objectif "${goal.title}" est arrivé à échéance. Vous avez atteint ${goal.currentAmount} DT sur ${goal.targetAmount} DT`;
-  return createNotification(userId, 'objectif_echoue', title, message);
+  return createNotification(userId, 'objectif_echoue', title, message, null, null, goal._id);
 };
 
 module.exports = {

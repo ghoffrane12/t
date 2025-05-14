@@ -57,13 +57,15 @@ const Sidebar = () => {
       sx={{
         width: 280,
         flexShrink: 0,
-        bgcolor: '#1E1E2D',
+        bgcolor: '#F0F3F4',
         height: '100vh',
         position: 'fixed',
         left: 0,
         top: 0,
         display: 'flex',
         flexDirection: 'column',
+        borderRight: '2px solid rgba(200, 200, 200, 0.8)',
+        boxShadow: '1px 0 3px rgba(147, 145, 145, 0.05)',
       }}
     >
       {/* Section du logo et du titre */}
@@ -115,7 +117,7 @@ const Sidebar = () => {
               button
               onClick={() => navigate(item.path)}
               sx={{
-                color: isActive ? '#FF5733' : 'rgba(255, 255, 255, 0.7)',
+                color: isActive ? '#FF5733' : '#17202A',
                 bgcolor: isActive ? 'rgba(255, 87, 51, 0.1)' : 'transparent',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
@@ -154,13 +156,13 @@ const Sidebar = () => {
           startIcon={<LogoutIcon />}
           onClick={handleLogout}
           sx={{
-            color: 'rgba(255, 255, 255, 0.7)',
+            color: 'rgba(42, 34, 34, 0.7)',
             bgcolor: 'transparent',
             textTransform: 'none',
             justifyContent: 'flex-start',
             padding: '10px 16px',
             '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
+              bgcolor: 'rgba(95, 93, 93, 0.05)',
             },
           }}
         >

@@ -22,7 +22,7 @@ import {
   Circle as CircleIcon,
 } from '@mui/icons-material';
 import Sidebar from '../../components/Sidebar';
-import { Notification, getNotifications, markAsRead, deleteNotification } from '../../services/notificationService';
+import { Notification, getNotifications, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from '../../services/notificationService';
 
 const NotificationsPage: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -49,7 +49,7 @@ const NotificationsPage: React.FC = () => {
 
   const handleMarkAsRead = async (id: string) => {
     try {
-      await markAsRead(id);
+      await markNotificationAsRead(id);
       setNotifications(notifications.map(n => 
         n._id === id ? { ...n, read: true } : n
       ));
@@ -69,8 +69,7 @@ const NotificationsPage: React.FC = () => {
 
   const handleMarkAllAsRead = async () => {
     try {
-      const unreadNotifications = notifications.filter(n => !n.read);
-      await Promise.all(unreadNotifications.map(n => markAsRead(n._id)));
+      await markAllNotificationsAsRead();
       setNotifications(notifications.map(n => ({ ...n, read: true })));
     } catch (error) {
       console.error('Erreur lors du marquage de toutes les notifications comme lues:', error);
@@ -99,7 +98,12 @@ const NotificationsPage: React.FC = () => {
       <Sidebar />
       <Box component="main" sx={{ flexGrow: 1, ml: '280px', bgcolor: '#F8F9FA' }}>
         {/* Barre orange supérieure */}
-        <AppBar position="static" sx={{ bgcolor: '#FF5733', boxShadow: 'none' }}>
+        <AppBar position="static" sx={{ 
+          bgcolor: '#F0F3F4', 
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+          borderBottom: '2px solid rgba(200, 200, 200, 0.8)',
+          borderRadius: 0
+        }}>
           <Toolbar sx={{ minHeight: '64px !important' }} />
         </AppBar>
 

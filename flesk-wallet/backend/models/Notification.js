@@ -7,6 +7,7 @@ const notificationSchema = new mongoose.Schema({
   message: String,
   category: String,
   location: String,
-  read: { type: Boolean, default: false }
+  read: { type: Boolean, default: false },
+  goalId: { type: mongoose.Schema.Types.ObjectId, ref: 'SavingsGoal', default: null }
 });
 module.exports = mongoose.model('Notification', notificationSchema); 

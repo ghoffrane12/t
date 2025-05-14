@@ -172,10 +172,14 @@ const SavingsPage: React.FC = () => {
       <Sidebar />
       
       <Box component="main" sx={{ flexGrow: 1, ml: '280px' }}>
-        <AppBar position="static" sx={{ bgcolor: '#FF5733', boxShadow: 'none' }}>
+      <AppBar position="static" sx={{ 
+          bgcolor: '#F0F3F4', 
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+          borderBottom: '2px solid rgba(200, 200, 200, 0.8)',
+          borderRadius: 0
+        }}>
           <Toolbar sx={{ minHeight: '64px !important' }} />
         </AppBar>
-
         <Box sx={{ p: 3 }}>
           <Typography variant="h4" sx={{ color: '#000000', mb: 4, fontWeight: 500 }}>
             Épargne

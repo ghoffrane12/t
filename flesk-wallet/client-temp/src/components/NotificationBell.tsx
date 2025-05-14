@@ -19,7 +19,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { Notification, getNotifications, markAsRead, deleteNotification } from '../services/notificationService';
+import { Notification, getNotifications, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from '../services/notificationService';
 
 /**
  * Composant NotificationBell
@@ -60,10 +60,19 @@ const NotificationBell: React.FC = () => {
   }, []);
 
   /**
-   * Ouvre le menu des notifications
+   * Ouvre le menu des notifications et marque les notifications comme lues
    */
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+    try {
+      // Marquer toutes les notifications comme lues lors de l'ouverture du menu
+      await markAllNotificationsAsRead();
+      // Mettre à jour l'état local
+      setNotifications(notifications.map(n => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Erreur lors du marquage des notifications comme lues:', error);
+    }
   };
 
   /**
@@ -78,7 +87,7 @@ const NotificationBell: React.FC = () => {
    */
   const handleMarkAsRead = async (id: string) => {
     try {
-      await markAsRead(id);
+      await markNotificationAsRead(id);
       setNotifications(notifications.map(n => 
         n._id === id ? { ...n, read: true } : n
       ));

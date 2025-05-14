@@ -41,15 +41,32 @@ export const getNotifications = async (): Promise<Notification[]> => {
 
 /**
  * Marque une notification comme lue
- * @param {string} id - ID de la notification
- * @returns {Promise<{success: boolean}>} Résultat de l'opération
+ * @param {string} notificationId - ID de la notification à marquer comme lue
+ * @returns {Promise<void>}
  */
-export const markAsRead = async (id: string): Promise<{success: boolean}> => {
+export const markNotificationAsRead = async (notificationId: string): Promise<void> => {
   try {
-    const response = await axios.put(`${API_URL}/notifications/${id}/read`, {}, getAuthHeader());
-    return response.data;
+    await axios.put(`${API_URL}/notifications/${notificationId}/read`, {}, getAuthHeader());
   } catch (error) {
-    console.error('Erreur lors du marquage comme lu:', error);
+    console.error('Erreur lors du marquage de la notification comme lue:', error);
+    throw error;
+  }
+};
+
+/**
+ * Marque toutes les notifications comme lues
+ * @returns {Promise<void>}
+ */
+export const markAllNotificationsAsRead = async (): Promise<void> => {
+  try {
+    const notifications = await getNotifications();
+    await Promise.all(
+      notifications
+        .filter(notification => !notification.read)
+        .map(notification => markNotificationAsRead(notification._id))
+    );
+  } catch (error) {
+    console.error('Erreur lors du marquage de toutes les notifications comme lues:', error);
     throw error;
   }
 };

@@ -15,7 +15,12 @@ const TransactionsPage: React.FC = () => {
       
       <Box component="main" sx={{ flexGrow: 1, ml: '280px' }}>
         {/* Barre orange supérieure */}
-        <AppBar position="static" sx={{ bgcolor: '#FF5733', boxShadow: 'none' }}>
+        <AppBar position="static" sx={{ 
+          bgcolor: '#FF5733', 
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+          borderBottom: '2px solid rgba(200, 200, 200, 0.8)',
+          borderRadius: 0
+        }}>
           <Toolbar sx={{ minHeight: '64px !important' }} />
         </AppBar>
 

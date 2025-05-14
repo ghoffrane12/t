@@ -141,8 +141,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
           bgcolor: 'background.default',
-          boxShadow: 'none',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+          borderBottom: '2px solid rgba(200, 200, 200, 0.8)',
+          borderRadius: 0
         }}
       >
         <Toolbar>
@@ -181,7 +182,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               boxSizing: 'border-box',
               width: drawerWidth,
               bgcolor: 'background.default',
-              borderRight: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRight: '2px solid rgba(44, 62, 80, 0.8)',
+              boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
             },
           }}
         >
@@ -195,7 +197,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               boxSizing: 'border-box',
               width: drawerWidth,
               bgcolor: 'background.default',
-              borderRight: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRight: '2px solid rgba(44, 62, 80, 0.8)',
+              boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
             },
           }}
           open
