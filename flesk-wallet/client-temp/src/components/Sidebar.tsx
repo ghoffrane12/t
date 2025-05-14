@@ -12,6 +12,7 @@ import {
   Savings as SavingsIcon,
   Logout as LogoutIcon,
   Subscriptions as SubscriptionsIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
 
 /**
@@ -39,6 +40,7 @@ const Sidebar = () => {
     { text: 'Budgets', icon: <BudgetIcon />, path: '/budgets' },
     { text: 'Localisation', icon: <LocationIcon />, path: '/location' },
     { text: 'Notification', icon: <NotificationIcon />, path: '/notifications' },
+    { text: 'Paramètres', icon: <SettingsIcon />, path: '/settings' },
   ];
 
   /**

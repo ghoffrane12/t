@@ -329,7 +329,7 @@ router.post('/', protect, async (req, res) => {
       const target = 5000;
       const months = 12;
       const monthly = calculateMonthlySavings(target, months);
-      return res.json({ response: `Pour économiser 5 000 DT en un an, tu dois mettre de côté ${monthly} DT par mois. Essaie d’automatiser une épargne mensuelle.` });
+      return res.json({ response: `Pour économiser 5 000 DT en un an, tu dois mettre de côté ${monthly} DT par mois. Essaie d'automatiser une épargne mensuelle.` });
     }
 
     // Habitudes
@@ -461,6 +461,167 @@ router.post('/', protect, async (req, res) => {
     }
     if (/rappelle.*comptes.*semaine/.test(q)) {
       return res.json({ response: "Rappel activé ! Je te rappellerai chaque semaine de vérifier tes comptes. Va dans les paramètres pour personnaliser les notifications." });
+    }
+
+    // Catégorie la plus dépensée
+    if (/cat(é|e)gorie.*(plus|max)/.test(q)) {
+      const agg = await Expense.aggregate([
+        { $match: { user: userId } },
+        { $group: { _id: '$category', sum: { $sum: '$amount' } } },
+        { $sort: { sum: -1 } },
+        { $limit: 1 }
+      ]);
+      const cat = agg[0]?._id || 'aucune catégorie';
+      const sum = agg[0]?.sum || 0;
+      return res.json({ response: `Tu dépenses le plus en ${cat} (${sum.toFixed(2)} DT).` });
+    }
+
+    // Catégorie la moins dépensée ce mois-ci
+    if (/cat(é|e)gorie.*(moins|min).*mois/.test(q)) {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+      const agg = await Expense.aggregate([
+        { $match: { user: userId, date: { $gte: start, $lte: end } } },
+        { $group: { _id: '$category', sum: { $sum: '$amount' } } },
+        { $sort: { sum: 1 } },
+        { $limit: 1 }
+      ]);
+      const cat = agg[0]?._id || 'aucune catégorie';
+      const sum = agg[0]?.sum || 0;
+      return res.json({ response: `Ce mois-ci, tu as le moins dépensé en ${cat} (${sum.toFixed(2)} DT).` });
+    }
+
+    // Classement des dépenses par catégorie
+    if (/classement.*d(é|e)penses.*cat(é|e)gorie/.test(q)) {
+      const agg = await Expense.aggregate([
+        { $match: { user: userId } },
+        { $group: { _id: '$category', sum: { $sum: '$amount' } } },
+        { $sort: { sum: -1 } }
+      ]);
+      if (!agg.length) return res.json({ response: "Aucune dépense trouvée." });
+      const list = agg.map((e, i) => `${i + 1}. ${e._id}: ${e.sum.toFixed(2)} DT`).join('\n');
+      return res.json({ response: `Classement de tes dépenses par catégorie :\n${list}` });
+    }
+
+    // Revenus en hausse/baisse par rapport au mois précédent
+    if (/revenu.*(augment|baisse|diminu|hausse).*mois pr(é|e)c(é|e)dent/.test(q)) {
+      const now = new Date();
+      const startThis = new Date(now.getFullYear(), now.getMonth(), 1);
+      const endThis = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+      const startPrev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const endPrev = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+      const totalThis = await Revenue.aggregate([
+        { $match: { user: userId, date: { $gte: startThis, $lte: endThis } } },
+        { $group: { _id: null, sum: { $sum: '$amount' } } }
+      ]);
+      const totalPrev = await Revenue.aggregate([
+        { $match: { user: userId, date: { $gte: startPrev, $lte: endPrev } } },
+        { $group: { _id: null, sum: { $sum: '$amount' } } }
+      ]);
+      const sumThis = totalThis[0]?.sum || 0;
+      const sumPrev = totalPrev[0]?.sum || 0;
+      const diff = sumThis - sumPrev;
+      let msg = diff > 0 ? `Tes revenus ont augmenté de ${diff.toFixed(2)} DT par rapport au mois précédent.` :
+        diff < 0 ? `Tes revenus ont diminué de ${Math.abs(diff).toFixed(2)} DT par rapport au mois précédent.` :
+        "Tes revenus sont stables par rapport au mois précédent.";
+      return res.json({ response: msg });
+    }
+
+    // Tendance des revenus cette année
+    if (/tendance.*revenu.*(cette|de l')ann(é|e)e/.test(q)) {
+      const year = new Date().getFullYear();
+      const agg = await Revenue.aggregate([
+        { $match: { user: userId, date: { $gte: new Date(year, 0, 1) } } },
+        { $group: { _id: { $month: '$date' }, sum: { $sum: '$amount' } } },
+        { $sort: { '_id': 1 } }
+      ]);
+      if (!agg.length) return res.json({ response: "Aucun revenu trouvé cette année." });
+      const list = agg.map(e => `Mois ${e._id}: ${e.sum.toFixed(2)} DT`).join(', ');
+      return res.json({ response: `Tendance de tes revenus cette année : ${list}` });
+    }
+
+    // Solde début de mois (placeholder)
+    if (/solde.*d(é|e)but.*mois/.test(q)) {
+      return res.json({ response: `(À implémenter) Ton solde en début de mois était de ... DT.` });
+    }
+
+    // Utilisation du budget shopping
+    if (/budget.*shopping.*utilis(é|e)/.test(q)) {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+      const budget = await Budget.findOne({ user: userId, category: 'shopping' });
+      const depenses = await Expense.aggregate([
+        { $match: { user: userId, category: 'shopping', date: { $gte: start, $lte: end } } },
+        { $group: { _id: null, sum: { $sum: '$amount' } } }
+      ]);
+      const used = depenses[0]?.sum || 0;
+      return res.json({ response: `Tu as utilisé ${used.toFixed(2)} DT de ton budget shopping ce mois-ci.` });
+    }
+
+    // Budget mensuel total
+    if (/budget.*mensuel.*total/.test(q)) {
+      const budgets = await Budget.find({ user: userId });
+      const total = budgets.reduce((sum, b) => sum + b.amount, 0);
+      return res.json({ response: `Ton budget mensuel total est de ${total.toFixed(2)} DT.` });
+    }
+
+    // Découvert (placeholder)
+    if (/d(é|e)couvert/.test(q)) {
+      return res.json({ response: `(À implémenter) Tu n'es pas à découvert.` });
+    }
+
+    // Reste pour les loisirs
+    if (/reste.*loisir/.test(q)) {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+      const budget = await Budget.findOne({ user: userId, category: 'loisirs' });
+      const depenses = await Expense.aggregate([
+        { $match: { user: userId, category: 'loisirs', date: { $gte: start, $lte: end } } },
+        { $group: { _id: null, sum: { $sum: '$amount' } } }
+      ]);
+      const used = depenses[0]?.sum || 0;
+      const reste = budget ? budget.amount - used : 0;
+      return res.json({ response: `Il te reste ${reste.toFixed(2)} DT pour les loisirs ce mois-ci.` });
+    }
+
+    // Conseils pour réduire les dépenses
+    if (/conseil.*(r(é|e)duire|diminuer).*d(é|e)pens(es|e|er)/.test(q)) {
+      return res.json({ response: "Voici quelques conseils :\n- Fixe-toi un budget par catégorie\n- Suis tes dépenses chaque semaine\n- Privilégie les achats utiles\n- Mets de côté dès le début du mois\n- Compare les prix avant d'acheter\n- Limite les abonnements non essentiels" });
+    }
+
+    // Lister toutes les catégories de dépenses
+    if (/liste.*cat(é|e)gorie.*d(é|e)pens(es|e|er)/.test(q)) {
+      const categories = await Expense.distinct('category', { user: userId });
+      if (!categories.length) return res.json({ response: "Aucune catégorie trouvée." });
+      return res.json({ response: `Voici tes catégories de dépenses : ${categories.join(', ')}` });
+    }
+
+    // 1. Je veux économiser mais je n'y arrive pas. Aide-moi.
+    if (/je veux (é|e)conomiser.*(pas|difficile|n'y arrive|j'y arrive pas|j'arrive pas)/.test(q)) {
+      return res.json({ response: `💡 Ce n'est pas toujours facile, mais c'est possible avec quelques habitudes simples :\n\n- Note chaque dépense, même les petites.\n- Fixe-toi un objectif précis (ex : "économiser 100dt par mois").\n- Supprime les achats impulsifs (attends 24h avant d'acheter).\n- Essaie la méthode 50/30/20 (50% besoins, 30% envies, 20% épargne).\n\nTu veux que je t'aide à créer un plan d'épargne personnalisé ? 😊` });
+    }
+
+    // 2. Donne-moi un conseil pour mieux gérer mon argent.
+    if (/(conseil|astuce).*mieux.*g(é|e)rer.*argent/.test(q)) {
+      return res.json({ response: `📊 Bien sûr ! Un conseil simple mais puissant :\nFais un budget mensuel et respecte-le.\n\n- Classe tes dépenses en catégories\n- Donne une limite à chaque catégorie\n- Vérifie chaque semaine si tu respectes ton plan\n\nTu peux aussi consulter ton solde et tes dépenses ici à tout moment 🧮` });
+    }
+
+    // 3. Quels sont tes conseils pour réduire mes dépenses ?
+    if (/(conseil|id(é|e)e|astuce).*r(é|e)duire.*d(é|e)pens(es|e|er)/.test(q)) {
+      return res.json({ response: `🛍️ Voici quelques idées concrètes pour réduire tes dépenses :\n\n- Planifie tes repas pour éviter les achats inutiles\n- Annule les abonnements que tu n'utilises plus\n- Compare toujours les prix avant d'acheter\n- Privilégie les achats d'occasion quand c'est possible\n- Fixe-toi une limite de dépenses hebdomadaire\n\nTu veux que je t'aide à repérer tes catégories les plus coûteuses ?` });
+    }
+
+    // 4. Est-ce que je suis bon(ne) en gestion de budget ?
+    if (/suis[- ]?je.*bon(ne)?.*gestion.*budget/.test(q)) {
+      return res.json({ response: `🤔 Voyons voir… Tu veux que je vérifie ton budget, ton solde et ta régularité ?\nEn général, si tu :\n- dépenses moins que ce que tu gagnes\n- respectes ton budget\n- arrives à épargner un peu chaque mois\nAlors tu es sur la bonne voie ! Bravo 👏\nTu veux un petit bilan de ton mois pour voir ça ensemble ?` });
+    }
+
+    // 5. As-tu une astuce pour économiser au quotidien ?
+    if (/(astuce|conseil).*économiser.*quotidien/.test(q)) {
+      return res.json({ response: `💸 Une astuce simple et efficace :\nPaye en espèces pour certaines catégories (ex: loisirs, shopping).\nQuand tu vois l'argent sortir physiquement, tu dépenses moins !\n\nAutre astuce : chaque fois que tu évites un achat inutile, transfère ce montant dans une "cagnotte épargne". Tu seras surpris(e) du résultat à la fin du mois ! 😄\nTu veux que je suive ça pour toi ?` });
     }
 
     // Par défaut

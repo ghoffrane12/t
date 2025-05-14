@@ -12,7 +12,8 @@ import {
   Menu,
   MenuItem,
   ListItemText,
-  Button
+  Button,
+  ListItemIcon
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
@@ -39,6 +40,8 @@ import { getRecentTransactions, Transaction } from '../services/transactionServi
 import { getRevenues } from '../services/revenuesService';
 import BudgetSummary from '../components/BudgetSummary';
 import { getBudgets, Budget } from '../services/budgetService';
+import ChatbotWidget from '../components/ChatbotWidget';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
@@ -51,7 +54,11 @@ const Dashboard: React.FC = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
+  const openSettings = Boolean(settingsAnchorEl);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const email = user?.email || '';
 
   useEffect(() => {
     fetchDashboardData();
@@ -154,6 +161,19 @@ const Dashboard: React.FC = () => {
     color: colorMap[goal.category] || '#636e72'
   }));
 
+  const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setSettingsAnchorEl(event.currentTarget);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsAnchorEl(null);
+  };
+
+  const handleGoToSettings = () => {
+    handleSettingsClose();
+    navigate('/settings');
+  };
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
       <Sidebar />
@@ -162,13 +182,28 @@ const Dashboard: React.FC = () => {
         <AppBar position="static" sx={{ bgcolor: '#FF5733', boxShadow: 'none' }}>
           <Toolbar sx={{ minHeight: '64px !important', display: 'flex', justifyContent: 'flex-end' }}>
             <NotificationBell />
+            <IconButton color="inherit" onClick={handleSettingsClick} sx={{ ml: 1 }}>
+              <AccountCircleIcon sx={{ color: '#222', fontSize: 32 }} />
+            </IconButton>
+            <Menu anchorEl={settingsAnchorEl} open={openSettings} onClose={handleSettingsClose}>
+              <MenuItem disabled>
+                <ListItemText primary={email} />
+              </MenuItem>
+              <MenuItem onClick={handleGoToSettings}>
+                <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+                <ListItemText primary="Paramètres" />
+              </MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
 
         {/* Titre de la page */}
         <Box sx={{ p: 3 }}>
-          <Typography variant="h4" sx={{ color: '#000000', mb: 4, fontWeight: 500 }}>
+          <Typography variant="h4" sx={{ color: '#000000', mb: 1, fontWeight: 500 }}>
             Tableau de bord
+          </Typography>
+          <Typography variant="h6" sx={{ color: '#222', mb: 4, fontWeight: 400 }}>
+            Bienvenue {user?.firstName || ''} {user?.lastName || ''}
           </Typography>
 
           {error && (
@@ -303,6 +338,7 @@ const Dashboard: React.FC = () => {
             </Box>
           )}
         </Box>
+        <ChatbotWidget />
       </Box>
     </Box>
   );

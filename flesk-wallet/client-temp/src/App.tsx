@@ -14,6 +14,7 @@ import BudgetsPage from './pages/budgets/BudgetsPage';
 import LocationPage from './pages/location/LocationPage';
 import NotificationsPage from './pages/notifications/NotificationsPage';
 import PrivateRoute from './components/PrivateRoute';
+import SettingsPage from './pages/SettingsPage';
 
 // Création du thème personnalisé
 const theme = createTheme({
@@ -130,6 +131,7 @@ const App: React.FC = () => {
               </PrivateRoute>
             }
           />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>
