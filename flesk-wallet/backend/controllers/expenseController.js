@@ -1,4 +1,6 @@
 const Expense = require('../models/Expense');
+const Budget = require('../models/Budget');
+const { createBudgetExceededNotification } = require('../services/notificationService');
 
 // Créer une nouvelle dépense
 exports.createExpense = async (req, res) => {
@@ -7,6 +9,26 @@ exports.createExpense = async (req, res) => {
             ...req.body,
             user: req.user._id
         });
+
+        // Mettre à jour le budget associé (le montant peut devenir négatif)
+        const budget = await Budget.findOne({
+            userId: req.user._id,
+            category: expense.category,
+            status: 'ACTIVE'
+        });
+        if (budget) {
+            budget.currentSpending += expense.amount;
+            if (typeof budget.remainingAmount === 'number') {
+                budget.remainingAmount -= expense.amount;
+            }
+            await budget.save();
+
+            // Vérifier si le budget est dépassé et créer une notification
+            if (budget.currentSpending > budget.amount) {
+                await createBudgetExceededNotification(req.user._id, budget);
+            }
+        }
+
         await expense.save();
         res.status(201).json(expense);
     } catch (error) {

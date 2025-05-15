@@ -29,14 +29,28 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, logout } from '../services/authService';
-console.log(">>> DashboardLayout.tsx modifié");
+import NotificationBell from '../components/NotificationBell';
 
 const drawerWidth = 240;
 
+/**
+ * Props interface for the DashboardLayout component
+ * @interface DashboardLayoutProps
+ * @property {React.ReactNode} children - The child components to be rendered within the layout
+ */
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
+/**
+ * DashboardLayout Component
+ * 
+ * A responsive layout component that provides the main structure for the dashboard.
+ * It includes a sidebar navigation, top app bar with user profile, and notification system.
+ * 
+ * @param {DashboardLayoutProps} props - The component props
+ * @returns {JSX.Element} The rendered dashboard layout
+ */
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -45,37 +59,42 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationCount, setNotificationCount] = useState(0);
 
+  /**
+   * Toggles the mobile drawer open/closed state
+   * Used for responsive navigation on mobile devices
+   */
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  /**
+   * Opens the profile menu when clicking on the avatar
+   * @param {React.MouseEvent<HTMLElement>} event - The click event
+   */
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  /**
+   * Closes the profile menu
+   */
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
   };
 
-  const handleNotificationsClick = () => {
-    navigate('/notifications');
-  };
-
+  /**
+   * Handles user logout
+   * Logs out the user and redirects to the login page
+   */
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  // Simulation de chargement des notifications
-  useEffect(() => {
-    // À remplacer par un appel API réel
-    const fetchNotifications = async () => {
-      // Exemple: const count = await notificationService.getUnreadCount();
-      setNotificationCount(3); // Valeur temporaire
-    };
-    fetchNotifications();
-  }, []);
-
+  /**
+   * Navigation menu items configuration
+   * Defines the structure and properties of each menu item in the sidebar
+   */
   const menuItems = [
     { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Comptes', icon: <AccountBalanceIcon />, path: '/accounts' },
@@ -84,6 +103,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     { text: 'Paramètres', icon: <SettingsIcon />, path: '/settings' },
   ];
 
+  /**
+   * Renders the sidebar drawer content
+   * Includes the app logo and navigation menu items
+   */
   const drawer = (
     <Box>
       <Toolbar>
@@ -118,10 +141,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       <AppBar
         position="fixed"
         sx={{
-          width: '100%',
-          bgcolor: 'primary.main',
-          boxShadow: 'none',
-          zIndex: theme.zIndex.drawer + 1,
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+          bgcolor: 'background.default',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+          borderBottom: '2px solid rgba(200, 200, 200, 0.8)',
+          borderRadius: 0
         }}
       >
         <Toolbar>
@@ -145,41 +170,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             FLESK WALLET
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          
-          {/* Icône de notifications */}
-          <IconButton
-            size="large"
-            aria-label="show notifications"
-            color="inherit"
-            onClick={handleNotificationsClick}
-            sx={{
-              mr: 2,
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              },
-            }}
-          >
-            <Badge
-              badgeContent={notificationCount}
-              color="error"
-              max={9}
-              sx={{
-                '& .MuiBadge-badge': {
-                  right: -3,
-                  top: 5,
-                  border: '2px solid',
-                  borderColor: 'primary.main',
-                  padding: '0 4px',
-                },
-              }}
-            >
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          
-          {/* Avatar utilisateur */}
-          <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0 }}>
-            <Avatar sx={{ bgcolor: 'white', color: 'primary.main' }}>
+          <NotificationBell />
+          <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0, ml: 2 }}>
+            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
               {user?.firstName?.[0]?.toUpperCase() || 'U'}
             </Avatar>
           </IconButton>
@@ -203,7 +196,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               boxSizing: 'border-box',
               width: drawerWidth,
               bgcolor: 'background.default',
-              borderRight: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRight: '2px solid rgba(44, 62, 80, 0.8)',
+              boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
             },
           }}
         >
@@ -217,7 +211,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               boxSizing: 'border-box',
               width: drawerWidth,
               bgcolor: 'background.default',
-              borderRight: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRight: '2px solid rgba(44, 62, 80, 0.8)',
+              boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
             },
           }}
           open

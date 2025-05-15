@@ -12,11 +12,24 @@ import {
   Savings as SavingsIcon,
   Logout as LogoutIcon,
   Subscriptions as SubscriptionsIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
+
+/**
+ * Composant Sidebar
+ * 
+ * Barre latérale de navigation principale de l'application.
+ * Contient le logo, les liens de navigation et le bouton de déconnexion.
+ * Utilise Material-UI pour le style et la mise en page.
+ */
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /**
+   * Configuration des éléments du menu de navigation
+   * Chaque élément contient un texte, une icône et un chemin de navigation
+   */
   const menuItems = [
     { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Transactions', icon: <PaymentIcon />, path: '/transactions' },
@@ -27,8 +40,13 @@ const Sidebar = () => {
     { text: 'Budgets', icon: <BudgetIcon />, path: '/budgets' },
     { text: 'Localisation', icon: <LocationIcon />, path: '/location' },
     { text: 'Notification', icon: <NotificationIcon />, path: '/notifications' },
+    { text: 'Paramètres', icon: <SettingsIcon />, path: '/settings' },
   ];
 
+  /**
+   * Gère la déconnexion de l'utilisateur
+   * Redirige vers la page de connexion
+   */
   const handleLogout = () => {
     // Ici vous pouvez ajouter la logique de déconnexion
     navigate('/login');
@@ -39,16 +57,18 @@ const Sidebar = () => {
       sx={{
         width: 280,
         flexShrink: 0,
-        bgcolor: '#1E1E2D',
+        bgcolor: '#F0F3F4',
         height: '100vh',
         position: 'fixed',
         left: 0,
         top: 0,
         display: 'flex',
         flexDirection: 'column',
+        borderRight: '2px solid rgba(200, 200, 200, 0.8)',
+        boxShadow: '1px 0 3px rgba(147, 145, 145, 0.05)',
       }}
     >
-      {/* Logo et titre */}
+      {/* Section du logo et du titre */}
       <Box
         sx={{
           p: 3,
@@ -86,7 +106,7 @@ const Sidebar = () => {
         </Typography>
       </Box>
 
-      {/* Menu items */}
+      {/* Liste des éléments du menu */}
       <List sx={{ px: 2, flex: 1 }}>
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
@@ -97,7 +117,7 @@ const Sidebar = () => {
               button
               onClick={() => navigate(item.path)}
               sx={{
-                color: isActive ? '#FF5733' : 'rgba(255, 255, 255, 0.7)',
+                color: isActive ? '#FF5733' : '#17202A',
                 bgcolor: isActive ? 'rgba(255, 87, 51, 0.1)' : 'transparent',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
@@ -129,20 +149,20 @@ const Sidebar = () => {
         })}
       </List>
 
-      {/* Bouton de déconnexion */}
+      {/* Section du bouton de déconnexion */}
       <Box sx={{ p: 2 }}>
         <Button
           fullWidth
           startIcon={<LogoutIcon />}
           onClick={handleLogout}
           sx={{
-            color: 'rgba(255, 255, 255, 0.7)',
+            color: 'rgba(42, 34, 34, 0.7)',
             bgcolor: 'transparent',
             textTransform: 'none',
             justifyContent: 'flex-start',
             padding: '10px 16px',
             '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
+              bgcolor: 'rgba(95, 93, 93, 0.05)',
             },
           }}
         >

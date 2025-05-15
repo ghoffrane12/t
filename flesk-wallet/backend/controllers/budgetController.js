@@ -1,4 +1,5 @@
 const Budget = require('../models/Budget');
+const { createBudgetExceededNotification } = require('../services/notificationService');
 
 // Obtenir tous les budgets
 exports.getBudgets = async (req, res) => {
@@ -173,6 +174,15 @@ exports.deductFromBudget = async (req, res) => {
       budget.status = 'COMPLETED';
     }
 
+    // Mettre à jour le montant dépensé
+    budget.currentSpending += amount;
+    budget.remainingAmount -= amount;
+
+    // Vérifier si le budget est dépassé (plus de 90% utilisé)
+    if (budget.currentSpending / budget.amount >= 0.9) {
+      await createBudgetExceededNotification(req.user.id, budget);
+    }
+
     await budget.save();
 
     res.json({
@@ -183,6 +193,35 @@ exports.deductFromBudget = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la déduction du montant',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Une erreur est survenue'
+    });
+  }
+};
+
+// Obtenir le budget actif pour une catégorie donnée
+exports.getBudgetByCategory = async (req, res) => {
+  try {
+    const budget = await Budget.findOne({
+      userId: req.user.id,
+      category: req.params.category,
+      status: 'ACTIVE'
+    });
+
+    if (!budget) {
+      return res.status(404).json({
+        success: false,
+        message: 'Aucun budget trouvé pour cette catégorie'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: budget
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la recherche du budget',
       error: process.env.NODE_ENV === 'development' ? error.message : 'Une erreur est survenue'
     });
   }

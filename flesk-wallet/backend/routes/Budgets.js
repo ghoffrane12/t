@@ -7,7 +7,8 @@ const {
   updateBudget,
   deleteBudget,
   getBudgetStats,
-  deductFromBudget
+  deductFromBudget,
+  getBudgetByCategory
 } = require('../controllers/budgetController');
 
 // Protection de toutes les routes
@@ -19,6 +20,7 @@ router.route('/')
   .post(createBudget);
 
 router.get('/stats', getBudgetStats);
+router.get('/category/:category', getBudgetByCategory);
 router.put('/:id', updateBudget);
 router.put('/:id/deduct', deductFromBudget);
 router.delete('/:id', deleteBudget);

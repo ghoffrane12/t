@@ -236,4 +236,113 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
+// Route pour mettre à jour les infos de l'utilisateur connecté
+router.put('/me', protect, async (req, res) => {
+  try {
+    const { firstName, lastName, email, currency, language } = req.body;
+    const updateFields = {};
+    if (firstName) updateFields.firstName = firstName;
+    if (lastName) updateFields.lastName = lastName;
+    if (email) updateFields.email = email;
+    if (currency) updateFields.currency = currency;
+    if (language) updateFields.language = language;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updateFields },
+      { new: true, runValidators: true, context: 'query' }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+    res.json({
+      success: true,
+      user
+    });
+  } catch (err) {
+    console.error('Update User Error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la mise à jour du profil',
+      error: process.env.NODE_ENV === 'development' ? err.message : 'Une erreur est survenue'
+    });
+  }
+});
+
+// Changement de mot de passe
+router.put('/change-password', protect, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Ancien et nouveau mot de passe requis.'
+      });
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'Le nouveau mot de passe doit contenir au moins 8 caractères.'
+      });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé.'
+      });
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Ancien mot de passe incorrect.'
+      });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.json({
+      success: true,
+      message: 'Mot de passe modifié avec succès.'
+    });
+  } catch (err) {
+    console.error('Change Password Error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors du changement de mot de passe.'
+    });
+  }
+});
+
+// Suppression du compte utilisateur connecté
+router.delete('/me', protect, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé.'
+      });
+    }
+    // (Optionnel) Supprimer les données associées ici (budgets, transactions, etc.)
+    res.json({
+      success: true,
+      message: 'Compte supprimé avec succès.'
+    });
+  } catch (err) {
+    console.error('Delete Account Error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la suppression du compte.'
+    });
+  }
+});
+
 module.exports = router; 
