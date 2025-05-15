@@ -9,28 +9,10 @@ import {
 } from '@mui/material';
 import Sidebar from '../../components/Sidebar';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
+import L from '../../utils/leafletConfig';
 
-import 'leaflet/dist/leaflet.css';
-
-// Fix icons (obligatoire pour que les marqueurs s'affichent)
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-const customIcon = new L.Icon({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
+// Import des styles personnalisés
+import '../../styles/leaflet.css';
 
 const LocationPage: React.FC = () => {
   const [position, setPosition] = useState<[number, number] | null>(null);
@@ -72,11 +54,11 @@ const LocationPage: React.FC = () => {
                   attribution='&copy; OpenStreetMap contributors'
                   url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
-                <Marker position={position} icon={customIcon}>
-  <Popup>
-    Vous êtes ici.
-  </Popup>
-</Marker>
+                <Marker position={position}>
+                  <Popup>
+                    Vous êtes ici.
+                  </Popup>
+                </Marker>
               </MapContainer>
             ) : (
               <Box

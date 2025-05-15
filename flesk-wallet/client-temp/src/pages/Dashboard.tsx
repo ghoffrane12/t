@@ -5,12 +5,9 @@ import {
   Paper,
   CircularProgress,
   Alert,
-<<<<<<< HEAD
+  Grid,
   AppBar,
   Toolbar
-=======
-  Grid,
->>>>>>> c2468b0d99659ee4b56571a9b8c392291416d74e
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
@@ -19,13 +16,10 @@ import {
   AccountBalance as BalanceIcon,
 } from '@mui/icons-material';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
-<<<<<<< HEAD
 import Sidebar from '../components/Sidebar';
-=======
 import ExpensePieChart from '../components/Charts/ExpensePieChart';
 import { getExpenses, Expense } from '../services/expensesService';
 import ExpenseIncomeChart from '../components/ExpenseIncomeChart';
->>>>>>> c2468b0d99659ee4b56571a9b8c392291416d74e
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);

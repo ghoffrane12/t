@@ -3,5 +3,8 @@
     "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.9.0",
     "faker": "^6.6.6"
+  },
+  "devDependencies": {
+    "postcss-loader": "^8.1.1"
   }
 }
