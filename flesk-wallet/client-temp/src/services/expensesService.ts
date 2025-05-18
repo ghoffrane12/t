@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { checkAndUpdateBudget } from './budgetService';
 
 export interface Expense {
   _id?: string;
@@ -48,12 +47,12 @@ export const createExpense = async (expense: Omit<Expense, '_id' | 'user' | 'cre
     const response = await axios.post(`${API_URL}/expenses`, expense);
     const createdExpense = response.data;
 
-    // Vérifier et mettre à jour le budget
-    const budgetResult = await checkAndUpdateBudget(expense.category, expense.amount);
-
     return {
       expense: createdExpense,
-      budgetResult
+      budgetResult: {
+        success: true,
+        message: 'Dépense créée avec succès'
+      }
     };
   } catch (error) {
     console.error('Erreur lors de la création de la dépense:', error);

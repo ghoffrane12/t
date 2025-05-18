@@ -24,7 +24,7 @@ interface PageHeaderProps {
  * @param {PageHeaderProps} props - Les propriétés du composant
  * @returns {JSX.Element} Un en-tête stylisé avec titre et icône optionnelle
  */
-const PageHeader: React.FC<PageHeaderProps> = ({ title, icon }) => {
+const PageHeader: React.FC<PageHeaderProps> = ({ title, icon, notificationCount = 0 }) => {
   return (
     <Paper 
       elevation={0}
@@ -35,7 +35,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, icon }) => {
         alignItems: 'center',
         bgcolor: 'rgba(255, 87, 51, 0.1)',
         borderRadius: 0,
-        justifyContent: 'space-between' // Ajouté pour aligner à droite
+        justifyContent: 'space-between'
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -45,7 +45,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, icon }) => {
         </Typography>
       </Box>
 
-      {/* Nouveau bloc notifications */}
       <IconButton 
         sx={{ 
           color: '#FF5733',

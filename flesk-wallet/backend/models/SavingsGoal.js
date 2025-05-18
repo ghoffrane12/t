@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 
 const savingsGoalSchema = new mongoose.Schema({
-  userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   title: {
     type: String,
-    required: true,
-    trim: true
+    required: true
+  },
+  category: {
+    type: String,
+    required: true
   },
   targetAmount: {
     type: Number,
@@ -18,7 +21,6 @@ const savingsGoalSchema = new mongoose.Schema({
   },
   currentAmount: {
     type: Number,
-    required: true,
     default: 0,
     min: 0
   },
@@ -26,24 +28,29 @@ const savingsGoalSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  category: {
-    type: String,
-    required: true,
-    trim: true
-  },
   status: {
     type: String,
-    enum: ['IN_PROGRESS', 'COMPLETED', 'FAILED'],
-    default: 'IN_PROGRESS'
+    enum: ['ACTIVE', 'COMPLETED', 'CANCELLED'],
+    default: 'ACTIVE'
   },
   createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
     type: Date,
     default: Date.now
   }
 });
 
+// Mettre à jour updatedAt avant chaque sauvegarde
+savingsGoalSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
 // Index pour améliorer les performances des requêtes
-savingsGoalSchema.index({ userId: 1, deadline: 1 });
+savingsGoalSchema.index({ user: 1, deadline: 1 });
 
 // Méthode pour vérifier et mettre à jour le statut de l'objectif
 savingsGoalSchema.methods.checkStatus = function() {

@@ -22,7 +22,7 @@ export const login = async (email: string, password: string): Promise<LoginRespo
     localStorage.setItem('user', JSON.stringify(user));
 
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     throw new Error(error.response?.data?.message || 'Erreur lors de la connexion');
   }
 };
@@ -46,7 +46,7 @@ export const register = async (
     localStorage.setItem('user', JSON.stringify(user));
 
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     throw new Error(error.response?.data?.message || 'Erreur lors de l\'inscription');
   }
 };

@@ -13,6 +13,8 @@ import {
   Button,
   ListItemIcon
 } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 import {
   TrendingDown as ExpensesIcon,
   TrendingUp as RevenuesIcon,

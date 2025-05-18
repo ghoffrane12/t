@@ -54,7 +54,7 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ open, onClose }
         setSuccess('');
         onClose();
       }, 1500);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.response?.data?.message || 'Erreur lors du changement de mot de passe.');
     } finally {
       setLoading(false);

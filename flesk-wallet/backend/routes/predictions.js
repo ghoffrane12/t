@@ -1,33 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const tf = require('@tensorflow/tfjs');
+const Expense = require('../models/Expense');
 
-// Exemple de prédiction (à remplacer par ta logique)
 router.get('/predict', async (req, res) => {
   try {
-    // Exemple de données d'entrée pour la prédiction
-    const features = [500, 10]; // Exemple: montant de 500 et catégorie de longueur 10
-    
-    // Créer un modèle simple (tu peux le remplacer par ton modèle préexistant)
-    const model = tf.sequential();
-    model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [2] }));
-    model.add(tf.layers.dense({ units: 32, activation: 'relu' }));
-    model.add(tf.layers.dense({ units: 1 }));
+    // Récupérer les 6 derniers mois de dépenses
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-    // Charger un modèle déjà existant si tu en as un sauvegardé
-    // await model.loadLayersModel('path_to_model/model.json');
+    const expenses = await Expense.find({
+      date: { $gte: sixMonthsAgo }
+    }).sort({ date: 1 });
 
-    // Conversion des données d'entrée en tensors
-    const input = tf.tensor2d([features]);
+    // Calculer la moyenne des dépenses mensuelles
+    const monthlyTotals = {};
+    expenses.forEach(expense => {
+      const month = expense.date.toISOString().slice(0, 7); // Format: YYYY-MM
+      monthlyTotals[month] = (monthlyTotals[month] || 0) + expense.amount;
+    });
 
-    // Prédiction
-    const prediction = model.predict(input);
-    const result = await prediction.data(); // Pour récupérer la prédiction
+    const monthlyAverages = Object.values(monthlyTotals);
+    const averageExpense = monthlyAverages.reduce((a, b) => a + b, 0) / monthlyAverages.length;
 
-    res.json({ prediction: result[0] });  // Envoie la prédiction en réponse
+    // Ajouter une variation aléatoire de ±10%
+    const variation = averageExpense * 0.1;
+    const prediction = averageExpense + (Math.random() * variation * 2 - variation);
+
+    res.json({ prediction });
   } catch (error) {
     console.error('Erreur de prédiction:', error);
-    res.status(500).json({ error: 'Erreur interne du serveur' });
+    res.status(500).json({ error: 'Erreur lors de la prédiction des dépenses' });
   }
 });
 

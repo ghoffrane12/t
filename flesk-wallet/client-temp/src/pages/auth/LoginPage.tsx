@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
     try {
       await login(email, password);
       navigate('/dashboard');
-    } catch (err: any) {
+    } catch (err) {
       setError('Erreur de connexion au serveur');
     }
   };

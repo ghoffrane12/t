@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import axios from '../services/axiosInstance';
 import {
   Box,
@@ -7,16 +7,37 @@ import {
   Toolbar,
   Button,
   Paper,
-  CircularProgress
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  MenuItem,
+  FormControlLabel,
+  Switch,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  IconButton,
+  Alert
 } from '@mui/material';
 import Sidebar from '../components/Sidebar';
 import { getExpenses, createExpense, updateExpense, deleteExpense, expenseCategories, Expense } from '../services/expensesService';
 import { getBudgetByCategory, createBudget, Budget, BudgetCreatePayload } from '../services/budgetService';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import { predictExpenses } from '../services/predictionService';
 
 const ExpensesPage: React.FC = () => {
   const [prediction, setPrediction] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -229,6 +250,19 @@ const ExpensesPage: React.FC = () => {
     setOpenBudgetForm(true);
   };
 
+  const handlePredict = async () => {
+    try {
+      setLoading(true);
+      const predictedAmount = await predictExpenses();
+      setPrediction(predictedAmount);
+    } catch (error) {
+      console.error('Erreur lors de la prédiction :', error);
+      setError('Erreur lors de la prédiction des dépenses');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
       <Sidebar />
@@ -245,33 +279,97 @@ const ExpensesPage: React.FC = () => {
 
         {/* Titre de la page */}
         <Box sx={{ p: 3 }}>
-          <Typography variant="h4" sx={{ color: '#000000', mb: 4, fontWeight: 500 }}>
-            Dépenses
-          </Typography>
-
-          {/* Contenu spécifique */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Bouton de prédiction */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+            <Typography variant="h4" sx={{ color: '#000000', fontWeight: 500 }}>
+              Dépenses
+            </Typography>
             <Button
               variant="contained"
-              color="primary"
-              onClick={handlePredict}
-              disabled={loading}
-              sx={{ width: '200px' }}
+              startIcon={<AddIcon />}
+              onClick={() => {
+                resetForm();
+                setOpenDialog(true);
+              }}
+              sx={{
+                bgcolor: '#FF5733',
+                '&:hover': { bgcolor: '#ff6b4a' },
+              }}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'Prédire les dépenses'}
+              Ajouter dépense
             </Button>
-
-            {/* Affichage de la prédiction */}
-            {prediction !== null && (
-              <Paper elevation={3} sx={{ p: 2, bgcolor: '#ffffff' }}>
-                <Typography variant="h6">
-                  Montant prédit pour le mois prochain :{' '}
-                  <strong>{prediction.toFixed(2)} TND</strong>
-                </Typography>
-              </Paper>
-            )}
           </Box>
+
+          {/* Tableau des dépenses */}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          {loading ? (
+            <Box display="flex" justifyContent="center" my={4}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Titre</TableCell>
+                    <TableCell>Montant (DT)</TableCell>
+                    <TableCell>Catégorie</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {expenses.map((expense) => (
+                    <TableRow key={expense._id}>
+                      <TableCell>{expense.nom}</TableCell>
+                      <TableCell>{expense.amount.toLocaleString()} DT</TableCell>
+                      <TableCell>{expense.category}</TableCell>
+                      <TableCell>{formatDate(expense.date)}</TableCell>
+                      <TableCell>{expense.description}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handleEditExpense(expense)}
+                          sx={{ color: '#4CAF50' }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleDeleteExpense(expense._id!)}
+                          sx={{ color: '#FF5733' }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+
+          {/* Bouton de prédiction sous le tableau */}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handlePredict}
+            >
+              Prédire les dépenses
+            </Button>
+          </Box>
+
+          {prediction !== null && (
+            <Paper elevation={3} sx={{ p: 2, bgcolor: '#ffffff', mt: 2 }}>
+              <Typography variant="h6">
+                Montant prédit pour le mois prochain :{' '}
+                <strong>{prediction.toFixed(2)} DT</strong>
+              </Typography>
+            </Paper>
+          )}
         </Box>
       </Box>
 
@@ -294,14 +392,14 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newExpense.nom}
-              onChange={(e) => setNewExpense(prev => ({ ...prev, nom: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewExpense(prev => ({ ...prev, nom: e.target.value }))}
             />
             <TextField
               label="Description"
               fullWidth
               required
               value={newExpense.description}
-              onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
             />
             <TextField
               label="Montant"
@@ -309,7 +407,7 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newExpense.amount}
-              onChange={(e) => setNewExpense(prev => ({ ...prev, amount: parseFloat(e.target.value) }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewExpense(prev => ({ ...prev, amount: parseFloat(e.target.value) }))}
             />
             <TextField
               select
@@ -317,7 +415,7 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newExpense.category}
-              onChange={(e) => setNewExpense(prev => ({ ...prev, category: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewExpense(prev => ({ ...prev, category: e.target.value }))}
             >
               {expenseCategories.map((category) => (
                 <MenuItem key={category} value={category}>
@@ -331,7 +429,7 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newExpense.date}
-              onChange={(e) => setNewExpense(prev => ({ ...prev, date: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewExpense(prev => ({ ...prev, date: e.target.value }))}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -374,7 +472,7 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newBudget.name}
-              onChange={(e) => setNewBudget(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewBudget(prev => ({ ...prev, name: e.target.value }))}
             />
             <TextField
               label="Montant (DT)"
@@ -382,7 +480,7 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newBudget.amount}
-              onChange={(e) => setNewBudget(prev => ({ ...prev, amount: Number(e.target.value) }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewBudget(prev => ({ ...prev, amount: Number(e.target.value) }))}
             />
             <TextField
               select
@@ -390,7 +488,7 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newBudget.period}
-              onChange={(e) => setNewBudget(prev => ({ ...prev, period: e.target.value as Budget['period'] }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewBudget(prev => ({ ...prev, period: e.target.value as Budget['period'] }))}
             >
               <MenuItem value="DAILY">Quotidien</MenuItem>
               <MenuItem value="WEEKLY">Hebdomadaire</MenuItem>
@@ -403,7 +501,7 @@ const ExpensesPage: React.FC = () => {
               fullWidth
               required
               value={newBudget.startDate}
-              onChange={(e) => setNewBudget(prev => ({ ...prev, startDate: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewBudget(prev => ({ ...prev, startDate: e.target.value }))}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -413,7 +511,7 @@ const ExpensesPage: React.FC = () => {
               type="date"
               fullWidth
               value={newBudget.endDate}
-              onChange={(e) => setNewBudget(prev => ({ ...prev, endDate: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewBudget(prev => ({ ...prev, endDate: e.target.value }))}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -424,13 +522,13 @@ const ExpensesPage: React.FC = () => {
               multiline
               rows={3}
               value={newBudget.description}
-              onChange={(e) => setNewBudget(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewBudget(prev => ({ ...prev, description: e.target.value }))}
             />
             <FormControlLabel
               control={
                 <Switch
                   checked={newBudget.notifications.enabled}
-                  onChange={(e) => setNewBudget(prev => ({
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setNewBudget(prev => ({
                     ...prev,
                     notifications: {
                       ...prev.notifications,

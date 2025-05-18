@@ -21,7 +21,7 @@ const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({ open, onClose
         headers: { Authorization: `Bearer ${token}` }
       });
       onDeleted();
-    } catch (err: any) {
+    } catch (err) {
       setError(err.response?.data?.message || 'Erreur lors de la suppression du compte.');
     } finally {
       setLoading(false);

@@ -42,7 +42,7 @@ const RegisterPage: React.FC = () => {
     try {
       await register(formData.email, formData.password, formData.firstName, formData.lastName);
       navigate('/dashboard');
-    } catch (err: any) {
+    } catch (err) {
       setError('Erreur lors de l\'inscription');
     }
   };

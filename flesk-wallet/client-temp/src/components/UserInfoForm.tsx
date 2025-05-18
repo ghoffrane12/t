@@ -89,7 +89,7 @@ const UserInfoForm: React.FC<UserInfoFormProps> = ({ open, onClose, onSuccess })
         onSuccess();
         onClose();
       }, 1500);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.response?.data?.message || 'Erreur lors de la mise à jour des informations');
     }
   };

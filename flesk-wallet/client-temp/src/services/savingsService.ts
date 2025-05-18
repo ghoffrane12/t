@@ -22,8 +22,8 @@ interface ApiError {
 // Récupérer tous les objectifs d'épargne
 export const getSavingsGoals = async (): Promise<SavingsGoal[]> => {
   try {
-    console.log('Appel API GET /saving-goals');
-    const response = await api.get('/saving-goals');
+    console.log('Appel API GET /savings');
+    const response = await api.get('/savings');
     console.log('Réponse API complète:', response);
     console.log('Données reçues:', response.data);
     
@@ -53,8 +53,8 @@ export const getSavingsGoals = async (): Promise<SavingsGoal[]> => {
 // Créer un nouvel objectif d'épargne
 export const createSavingsGoal = async (goalData: Omit<SavingsGoal, 'id'>): Promise<SavingsGoal> => {
   try {
-    console.log('Appel API POST /saving-goals avec les données:', goalData);
-    const response = await api.post('/saving-goals', goalData);
+    console.log('Appel API POST /savings avec les données:', goalData);
+    const response = await api.post('/savings', goalData);
     console.log('Réponse API complète:', response);
     console.log('Données reçues:', response.data);
 
@@ -82,8 +82,8 @@ export const createSavingsGoal = async (goalData: Omit<SavingsGoal, 'id'>): Prom
 // Mettre à jour un objectif d'épargne
 export const updateSavingsGoal = async (id: string, goalData: Partial<SavingsGoal>): Promise<SavingsGoal> => {
   try {
-    console.log(`Appel API PUT /saving-goals/${id} avec les données:`, goalData);
-    const response = await api.put(`/saving-goals/${id}`, goalData);
+    console.log(`Appel API PUT /savings/${id} avec les données:`, goalData);
+    const response = await api.put(`/savings/${id}`, goalData);
     console.log('Réponse API complète:', response);
     console.log('Données reçues:', response.data);
 
@@ -111,8 +111,8 @@ export const updateSavingsGoal = async (id: string, goalData: Partial<SavingsGoa
 // Supprimer un objectif d'épargne
 export const deleteSavingsGoal = async (id: string): Promise<void> => {
   try {
-    console.log(`Appel API DELETE /saving-goals/${id}`);
-    const response = await api.delete(`/saving-goals/${id}`);
+    console.log(`Appel API DELETE /savings/${id}`);
+    const response = await api.delete(`/savings/${id}`);
     console.log('Réponse API complète:', response);
   } catch (error) {
     if (axios.isAxiosError(error)) {
