@@ -90,7 +90,8 @@ const UserInfoForm: React.FC<UserInfoFormProps> = ({ open, onClose, onSuccess })
         onClose();
       }, 1500);
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur lors de la mise à jour des informations');
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      setError(axiosError.response?.data?.message || 'Erreur lors de la mise à jour des informations');
     }
   };
 
