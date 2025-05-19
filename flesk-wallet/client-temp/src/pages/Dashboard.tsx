@@ -333,7 +333,7 @@ const Dashboard: React.FC = () => {
                 </Box>
                 <Box sx={{ flex: 2, minWidth: 320 }}>
                   <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, color: '#2d3a66', fontSize: 22 }}>
-                    Répartition des Dépenses par Catégorie
+                    
                   </Typography>
                   <ExpensePieChart data={pieData} />
                 </Box>

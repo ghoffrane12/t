@@ -247,7 +247,7 @@ router.post('/', protect, async (req, res) => {
         { $match: { user: userId } },
         { $group: { _id: null, sum: { $sum: '$amount' } } }
       ]);
-      const solde = (totalRevenues[0]?.sum || 0) - (totalExpenses[0]?.sum || 0);
+      const solde = (totalRevenues[0]?.sum || 0) - (totalExpenses[0]?.sum || 0) ;
       return res.json({ response: `Ton solde actuel est de ${solde.toFixed(2)} DT.` });
     }
     if (/reste.*budget.*alimentation/.test(q)) {
