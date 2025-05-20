@@ -99,7 +99,9 @@ const SavingsPage: React.FC = () => {
   };
 
   const handleEditGoal = (goal: SavingsGoal) => {
+    console.log('handleEditGoal appelé avec goal:', goal);
     setSelectedGoal(goal);
+    console.log('selectedGoal après setSelectedGoal:', selectedGoal);
     setNewGoal({
       title: goal.title,
       targetAmount: goal.targetAmount,
