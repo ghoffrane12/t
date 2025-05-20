@@ -178,17 +178,24 @@ exports.syncSubscriptions = async (req, res) => {
 exports.checkRenewalSubscriptions = async () => {
     try {
         const today = new Date();
-        const nextWeek = new Date(today);
-        nextWeek.setDate(today.getDate() + 7);
+        today.setHours(0, 0, 0, 0); // Début d'aujourd'hui
 
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1); // Début de demain
+
+        const dayAfterTomorrow = new Date(tomorrow);
+        dayAfterTomorrow.setDate(tomorrow.getDate() + 1); // Début d'après-demain
+
+        // Rechercher les abonnements dont la prochaine date de paiement est exactement demain
         const subscriptionsToRenew = await Subscription.find({
             nextPaymentDate: {
-                $gte: today,
-                $lte: nextWeek
+                $gte: tomorrow, // Date égale ou supérieure au début de demain
+                $lt: dayAfterTomorrow // Date strictement inférieure au début d'après-demain
             }
         });
 
         for (const subscription of subscriptionsToRenew) {
+            // Créer une notification de rappel de paiement pour demain
             await createPaymentReminderNotification(subscription.user, subscription);
         }
     } catch (error) {
