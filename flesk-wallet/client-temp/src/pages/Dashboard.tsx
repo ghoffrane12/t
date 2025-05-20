@@ -6,20 +6,15 @@ import {
   CircularProgress,
   Alert,
   Grid,
-<<<<<<< HEAD
   IconButton,
   Menu,
   MenuItem,
   ListItemText,
   Button,
-  ListItemIcon
-=======
+  ListItemIcon,
   AppBar,
-  Toolbar,
->>>>>>> 1c5d25297294970fc0d006d1d2a60d5b8af1dc15
+  Toolbar
 } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import {
   TrendingDown as ExpensesIcon,
   TrendingUp as RevenuesIcon,
@@ -28,14 +23,10 @@ import {
   Notifications as NotificationsIcon
 } from '@mui/icons-material';
 import { calculateDashboardTotals, DashboardTotals } from '../services/dashboardService';
-<<<<<<< HEAD
 import Sidebar from '../components/Sidebar';
-=======
->>>>>>> 1c5d25297294970fc0d006d1d2a60d5b8af1dc15
 import ExpensePieChart from '../components/Charts/ExpensePieChart';
 import { getExpenses } from '../services/expensesService';
 import ExpenseIncomeChart from '../components/ExpenseIncomeChart';
-<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -51,9 +42,6 @@ import BudgetSummary from '../components/BudgetSummary';
 import { getBudgets, Budget } from '../services/budgetService';
 import ChatbotWidget from '../components/ChatbotWidget';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-=======
-import Sidebar from '../components/Sidebar';
->>>>>>> 1c5d25297294970fc0d006d1d2a60d5b8af1dc15
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
