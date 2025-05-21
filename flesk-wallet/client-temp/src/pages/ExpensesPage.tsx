@@ -32,6 +32,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { predictExpenses } from '../services/predictionService';
 
+// Ajout des périodes comme constante
+const periods = [
+  { value: 'DAILY', label: 'Quotidien' },
+  { value: 'WEEKLY', label: 'Hebdomadaire' },
+  { value: 'MONTHLY', label: 'Mensuel' },
+  { value: 'YEARLY', label: 'Annuel' }
+];
+
 const ExpensesPage: React.FC = () => {
   const [prediction, setPrediction] = useState<{ 
     globalPrediction: number; 
@@ -104,6 +112,9 @@ const ExpensesPage: React.FC = () => {
 
       if (newExpense.amount > existingBudget.remainingAmount) {
         setOpenDepassementDialog(true);
+        setPendingExpense(newExpense);
+        setLoading(false);
+        return;
       }
 
       await createExpense(newExpense);
@@ -217,23 +228,19 @@ const ExpensesPage: React.FC = () => {
 
   const handleBudgetPromptCancel = async () => {
     if (pendingExpense) {
-      setLoading(true);
       try {
+        setLoading(true);
         await createExpense(pendingExpense);
         await fetchExpenses();
       } catch (err) {
         setError('Erreur lors de la création de la dépense');
       } finally {
         setLoading(false);
-        setOpenBudgetPrompt(false);
-        setPendingExpense(null);
-        resetForm();
       }
-    } else {
-      setOpenBudgetPrompt(false);
-      setPendingExpense(null);
-      resetForm();
     }
+    setOpenBudgetPrompt(false);
+    setPendingExpense(null);
+    resetForm();
   };
 
   const handleBudgetPromptCreate = () => {
@@ -259,6 +266,29 @@ const ExpensesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDepassementConfirm = async () => {
+    if (pendingExpense) {
+      try {
+        setLoading(true);
+        await createExpense(pendingExpense);
+        await fetchExpenses();
+        setOpenDepassementDialog(false);
+        setOpenDialog(false);
+        resetForm();
+      } catch (err) {
+        setError('Erreur lors de la création de la dépense');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleDepassementCancel = () => {
+    setOpenDepassementDialog(false);
+    setPendingExpense(null);
   };
 
   return (
@@ -348,6 +378,70 @@ const ExpensesPage: React.FC = () => {
                 </Table>
               </TableContainer>
 
+              <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+                <DialogTitle>{isEditing ? 'Modifier la dépense' : 'Ajouter une dépense'}</DialogTitle>
+                <DialogContent>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                    <TextField
+                      label="Nom"
+                      fullWidth
+                      required
+                      value={newExpense.nom}
+                      onChange={(e) => setNewExpense(prev => ({ ...prev, nom: e.target.value }))}
+                    />
+                    <TextField
+                      label="Montant (DT)"
+                      type="number"
+                      fullWidth
+                      required
+                      value={newExpense.amount}
+                      onChange={(e) => setNewExpense(prev => ({ ...prev, amount: Number(e.target.value) }))}
+                    />
+                    <TextField
+                      select
+                      label="Catégorie"
+                      fullWidth
+                      required
+                      value={newExpense.category}
+                      onChange={(e) => setNewExpense(prev => ({ ...prev, category: e.target.value }))}
+                    >
+                      {expenseCategories.map((category) => (
+                        <MenuItem key={category} value={category}>
+                          {category}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <TextField
+                      label="Date"
+                      type="date"
+                      fullWidth
+                      required
+                      InputLabelProps={{ shrink: true }}
+                      value={newExpense.date}
+                      onChange={(e) => setNewExpense(prev => ({ ...prev, date: e.target.value }))}
+                    />
+                    <TextField
+                      label="Description"
+                      fullWidth
+                      multiline
+                      rows={3}
+                      value={newExpense.description}
+                      onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
+                    />
+                  </Box>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
+                  <Button 
+                    onClick={isEditing ? handleUpdateExpense : handleAddExpense}
+                    variant="contained"
+                    sx={{ bgcolor: '#FF5733', '&:hover': { bgcolor: '#ff6b4a' } }}
+                  >
+                    {isEditing ? 'Modifier' : 'Ajouter'}
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
                 <Button
                   variant="contained"
@@ -390,13 +484,127 @@ const ExpensesPage: React.FC = () => {
                   )}
                 </Paper>
               )}
+
+              {/* Dialogue de dépassement de budget */}
+              <Dialog open={openDepassementDialog} onClose={handleDepassementCancel}>
+                <DialogTitle>Attention - Dépassement de budget</DialogTitle>
+                <DialogContent>
+                  <Typography>
+                    Cette dépense dépassera votre budget pour cette catégorie. Voulez-vous continuer ?
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleDepassementCancel}>Annuler</Button>
+                  <Button 
+                    onClick={handleDepassementConfirm}
+                    variant="contained"
+                    sx={{ bgcolor: '#FF5733', '&:hover': { bgcolor: '#ff6b4a' } }}
+                  >
+                    Confirmer
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* Dialogue de proposition de création de budget */}
+              <Dialog open={openBudgetPrompt} onClose={handleBudgetPromptCancel}>
+                <DialogTitle>Créer un budget pour cette catégorie ?</DialogTitle>
+                <DialogContent>
+                  <Typography>
+                    Vous n'avez pas encore de budget pour la catégorie "{pendingExpense?.category}". 
+                    Voulez-vous en créer un maintenant ?
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleBudgetPromptCancel}>Non, ajouter juste la dépense</Button>
+                  <Button 
+                    onClick={handleBudgetPromptCreate}
+                    variant="contained"
+                    sx={{ bgcolor: '#FF5733', '&:hover': { bgcolor: '#ff6b4a' } }}
+                  >
+                    Oui, créer un budget
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* Formulaire de création de budget */}
+              <Dialog open={openBudgetForm} onClose={() => setOpenBudgetForm(false)} maxWidth="sm" fullWidth>
+                <DialogTitle>Créer un nouveau budget</DialogTitle>
+                <DialogContent>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                    <TextField
+                      label="Nom du budget"
+                      fullWidth
+                      required
+                      value={newBudget.name}
+                      onChange={(e) => setNewBudget(prev => ({ ...prev, name: e.target.value }))}
+                    />
+                    <TextField
+                      label="Montant (DT)"
+                      type="number"
+                      fullWidth
+                      required
+                      value={newBudget.amount}
+                      onChange={(e) => setNewBudget(prev => ({ ...prev, amount: Number(e.target.value) }))}
+                    />
+                    <TextField
+                      select
+                      label="Période"
+                      fullWidth
+                      required
+                      value={newBudget.period}
+                      onChange={(e) => setNewBudget(prev => ({ 
+                        ...prev, 
+                        period: e.target.value as Budget['period']
+                      }))}
+                    >
+                      {periods.map((period) => (
+                        <MenuItem key={period.value} value={period.value}>
+                          {period.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <TextField
+                      label="Date de début"
+                      type="date"
+                      fullWidth
+                      required
+                      InputLabelProps={{ shrink: true }}
+                      value={newBudget.startDate}
+                      onChange={(e) => setNewBudget(prev => ({ ...prev, startDate: e.target.value }))}
+                    />
+                    <TextField
+                      label="Date de fin (optionnel)"
+                      type="date"
+                      fullWidth
+                      InputLabelProps={{ shrink: true }}
+                      value={newBudget.endDate}
+                      onChange={(e) => setNewBudget(prev => ({ ...prev, endDate: e.target.value }))}
+                    />
+                    <TextField
+                      label="Description"
+                      fullWidth
+                      multiline
+                      rows={3}
+                      value={newBudget.description}
+                      onChange={(e) => setNewBudget(prev => ({ ...prev, description: e.target.value }))}
+                    />
+                  </Box>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setOpenBudgetForm(false)}>Annuler</Button>
+                  <Button 
+                    onClick={handleCreateBudget}
+                    variant="contained"
+                    sx={{ bgcolor: '#FF5733', '&:hover': { bgcolor: '#ff6b4a' } }}
+                  >
+                    Créer le budget
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </>
           )}
         </Box>
       </Box>
-
-      {/* Les Dialog restent identiques à votre code original */}
-      {/* ... */}
     </Box>
   );
 };

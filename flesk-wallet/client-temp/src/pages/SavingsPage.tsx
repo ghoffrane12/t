@@ -77,6 +77,22 @@ const SavingsPage: React.FC = () => {
     }
   };
 
+  const calculateSavingsRecommendation = (targetAmount: number, deadline: string) => {
+    const today = new Date();
+    const deadlineDate = new Date(deadline);
+    const monthsRemaining = (deadlineDate.getFullYear() - today.getFullYear()) * 12 + 
+      (deadlineDate.getMonth() - today.getMonth());
+    const weeksRemaining = Math.ceil((deadlineDate.getTime() - today.getTime()) / (7 * 24 * 60 * 60 * 1000));
+
+    const monthlyAmount = targetAmount / monthsRemaining;
+    const weeklyAmount = targetAmount / weeksRemaining;
+
+    return {
+      monthly: Number(monthlyAmount.toFixed(2)),
+      weekly: Number(weeklyAmount.toFixed(2))
+    };
+  };
+
   const handleAddGoal = async () => {
     try {
       setLoading(true);
@@ -99,7 +115,9 @@ const SavingsPage: React.FC = () => {
   };
 
   const handleEditGoal = (goal: SavingsGoal) => {
+    console.log('handleEditGoal appelé avec goal:', goal);
     setSelectedGoal(goal);
+    console.log('selectedGoal après setSelectedGoal:', selectedGoal);
     setNewGoal({
       title: goal.title,
       targetAmount: goal.targetAmount,
@@ -276,6 +294,22 @@ const SavingsPage: React.FC = () => {
                       </Typography>
                     </Box>
                   </Box>
+
+                  {/* Savings Recommendation */}
+                  {goal.targetAmount > goal.currentAmount && new Date(goal.deadline) > new Date() && (() => {
+                    const recommendation = calculateSavingsRecommendation(goal.targetAmount - goal.currentAmount, goal.deadline);
+                    if (recommendation.monthly > 0 || recommendation.weekly > 0) {
+                      return (
+                        <Box sx={{ mt: 2 }}>
+                          <Typography variant="body2" color="success" sx={{ fontStyle: 'italic', color: '#4CAF50', fontWeight: 'bold' }}>
+                            Pour atteindre votre objectif restant ({goal.targetAmount - goal.currentAmount} DT),
+                            vous devez épargner environ {recommendation.monthly} DT par mois ou {recommendation.weekly} DT par semaine.
+                          </Typography>
+                        </Box>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   <Box>
                     <Typography variant="body2" color="textSecondary">
