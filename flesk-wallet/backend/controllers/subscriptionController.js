@@ -17,47 +17,44 @@ exports.createSubscription = async (req, res) => {
             });
         }
 
+        // Utiliser la date de début pour la première date de paiement pour la création de la dépense
+        const initialNextPaymentDate = new Date(startDate);
+
         const subscription = new Subscription({
             ...req.body,
             user: req.user._id,
-            nextPaymentDate: startDate
+            nextPaymentDate: initialNextPaymentDate // Initialiser avec la date de début
         });
         await subscription.save();
         logger.info('Abonnement créé avec succès:', subscription._id);
 
-        // Vérifier si la date de paiement est aujourd'hui
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const paymentDate = new Date(subscription.nextPaymentDate);
-        paymentDate.setHours(0, 0, 0, 0);
-
-        if (paymentDate.getTime() === today.getTime()) {
-            logger.info('Date de paiement est aujourd\'hui, création notification immédiate');
-            await createPaymentReminderNotification(subscription.user, subscription);
-        }
-
-        // Créer automatiquement la première dépense
+        // Créer automatiquement la première dépense basée sur la date de début
         const expense = new Expense({
             nom: `${subscription.name} (Abonnement)`,
             description: `Paiement de l'abonnement ${subscription.name}`,
             amount: subscription.amount,
             category: subscription.category,
-            date: subscription.startDate,
+            date: initialNextPaymentDate,
             user: req.user._id
         });
         await expense.save();
         logger.info('Première dépense créée pour l\'abonnement:', expense._id);
 
-        // Calculer et mettre à jour la prochaine date de paiement
-        const nextDate = new Date(subscription.startDate);
+        // Calculer la *prochaine* date de paiement (après la première)
+        const nextDateAfterInitial = new Date(initialNextPaymentDate);
         if (subscription.frequency === 'monthly') {
-            nextDate.setMonth(nextDate.getMonth() + 1);
+            nextDateAfterInitial.setMonth(nextDateAfterInitial.getMonth() + 1);
         } else {
-            nextDate.setFullYear(nextDate.getFullYear() + 1);
+            nextDateAfterInitial.setFullYear(nextDateAfterInitial.getFullYear() + 1);
         }
-        subscription.nextPaymentDate = nextDate;
+
+        // Mettre à jour la prochaine date de paiement dans l'abonnement
+        subscription.nextPaymentDate = nextDateAfterInitial;
         await subscription.save();
-        logger.info('Date du prochain paiement mise à jour:', nextDate);
+        logger.info('Date du prochain paiement mise à jour pour la prochaine échéance:', nextDateAfterInitial);
+
+        // MAINTENANT, vérifier si une notification de rappel immédiate est nécessaire pour la *nouvelle* nextPaymentDate
+        await createPaymentReminderNotification(subscription.user, subscription);
 
         res.status(201).json(subscription);
     } catch (error) {
@@ -160,6 +157,9 @@ exports.updateSubscription = async (req, res) => {
                 logger.info('Date du prochain paiement mise à jour:', nextDate);
             }
         }
+        
+        // Vérifier si une notification de rappel immédiate est nécessaire après mise à jour
+        await createPaymentReminderNotification(subscription.user, subscription);
 
         logger.info('Abonnement mis à jour avec succès:', subscription._id);
         res.json(subscription);
