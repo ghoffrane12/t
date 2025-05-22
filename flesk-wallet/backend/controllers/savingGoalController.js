@@ -34,12 +34,9 @@ exports.getAllSavingGoals = async (req, res) => {
     const goals = await SavingsGoal.find({ user: req.user._id });
     logger.info(`${goals.length} objectifs trouvés`);
     
-    // Mettre à jour le statut de chaque objectif et vérifier les notifications
-    for (let goal of goals) {
-      goal.checkStatus();
-      await goal.save();
-      await checkAndCreateNotifications(goal, req.user._id);
-    }
+    // La vérification du statut et la création des notifications sont gérées par le cron job et d'autres routes spécifiques (sync/update).
+    // Nous ne les exécutons pas lors d'une simple récupération pour éviter les appels multiples.
+    
     res.json(goals);
   } catch (err) {
     logger.error('Erreur lors de la récupération des objectifs:', err);
