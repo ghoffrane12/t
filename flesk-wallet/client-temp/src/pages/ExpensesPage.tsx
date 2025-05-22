@@ -30,7 +30,7 @@ import { getBudgetByCategory, createBudget, Budget, BudgetCreatePayload } from '
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { predictExpenses } from '../services/predictionService';
+//import { predictExpenses } from '../services/predictionService';
 
 // Ajout des périodes comme constante
 const periods = [
@@ -248,7 +248,7 @@ const ExpensesPage: React.FC = () => {
     setOpenBudgetForm(true);
   };
 
-  const handlePredict = async () => {
+  {/*const handlePredict = async () => {
     try {
       setLoading(true);
       setError(null);
@@ -266,7 +266,7 @@ const ExpensesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  };*/}
 
   const handleDepassementConfirm = async () => {
     if (pendingExpense) {
@@ -442,16 +442,16 @@ const ExpensesPage: React.FC = () => {
                 </DialogActions>
               </Dialog>
 
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+              {/*<Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
                 <Button
                   variant="contained"
                   color="success"
-                  onClick={handlePredict}
+                  //onClick={handlePredict}
                   disabled={loading}
                 >
                   {loading ? <CircularProgress size={24} /> : 'Prédire les dépenses'}
                 </Button>
-              </Box>
+              </Box>*/}
 
               {prediction !== null && (
                 <Paper elevation={3} sx={{ p: 2, bgcolor: '#ffffff', mt: 2 }}>

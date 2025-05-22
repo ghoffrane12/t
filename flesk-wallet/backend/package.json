@@ -8,6 +8,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.9",
     "cors": "^2.8.5",

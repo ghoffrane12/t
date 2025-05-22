@@ -1,7 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-
-
 const dotenv = require('dotenv');
 
 // Chargement des variables d'environnement
@@ -11,7 +9,6 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
@@ -25,11 +22,11 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/expenses', require('./routes/expenseRoutes'));
 app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 app.use('/api/revenues', require('./routes/revenueRoutes'));
-app.use('/api/predictions', require('./routes/predictions'));
 app.use('/api/notifications', require('./routes/Notifications'));
 app.use('/api/chatbot', require('./routes/chatbot'));
 app.use('/api/budgets', require('./routes/Budgets'));
 app.use('/api/savings', require('./routes/savings'));
+app.use('/api/prediction', require('./routes/prediction')); // ✅ Route ajoutée ici
 
 // Middleware de gestion des erreurs (doit être le dernier)
 app.use((err, req, res, next) => {

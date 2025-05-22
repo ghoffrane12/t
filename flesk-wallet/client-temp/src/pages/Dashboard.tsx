@@ -42,6 +42,8 @@ import BudgetSummary from '../components/BudgetSummary';
 import { getBudgets, Budget } from '../services/budgetService';
 import ChatbotWidget from '../components/ChatbotWidget';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BarPredictionChart from '../components/Charts/ExpensePredictionBarChart';
+import { getNextMonthPredictions } from '../services/predictionService';
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
@@ -51,7 +53,9 @@ const Dashboard: React.FC = () => {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
-
+  const [showPredictions, setShowPredictions] = useState(false);
+  const [predictions, setPredictions] = useState<{ category: string; amount: number }[]>([]);
+  
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
@@ -124,7 +128,11 @@ const Dashboard: React.FC = () => {
       // Optionnel: gestion d'erreur
     }
   };
+  useEffect(() => {
+    fetchPredictions();
+  }, []);
 
+  
   const formatAmount = (amount: number) => {
     return amount.toLocaleString('fr-FR', {
       style: 'currency',
@@ -170,6 +178,16 @@ const Dashboard: React.FC = () => {
   const handleGoToSettings = () => {
     handleSettingsClose();
     navigate('/settings');
+  };
+
+  const fetchPredictions = async () => {
+    try {
+      const response = await getNextMonthPredictions();
+    setPredictions(response); //
+        
+    } catch (error) {
+      console.error('Error fetching predictions:', error);
+    }
   };
 
   return (
@@ -329,6 +347,28 @@ const Dashboard: React.FC = () => {
               <Grid item xs={12}>
                 <ExpenseIncomeChart />
               </Grid>
+
+              <Box sx={{ mb: 3 }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    if (!showPredictions) fetchPredictions();
+                    setShowPredictions(prev => !prev);
+                  }}
+                >
+                  {showPredictions ? 'Masquer les prédictions' : 'Afficher les prédictions'}
+                </Button>
+              </Box>
+
+              {showPredictions && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                    Prédiction des dépenses du mois prochain par catégorie
+                  </Typography>
+                  <BarPredictionChart predictions={predictions} />
+                </Box>
+              )}
 
               <Box sx={{ display: 'flex', gap: 3 }}>
                 <Box sx={{ flex: 1 }}>
