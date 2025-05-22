@@ -32,7 +32,6 @@ const Sidebar = () => {
    */
   const menuItems = [
     { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/dashboard' },
-    { text: 'Transactions', icon: <PaymentIcon />, path: '/transactions' },
     { text: 'Dépenses', icon: <ExpensesIcon />, path: '/expenses' },
     { text: 'Revenus', icon: <RevenuesIcon />, path: '/incomes' },
     { text: 'Abonnements', icon: <SubscriptionsIcon />, path: '/subscriptions' },

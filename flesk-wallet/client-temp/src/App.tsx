@@ -5,7 +5,6 @@ import { createTheme } from '@mui/material/styles';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import Dashboard from './pages/Dashboard';
-import TransactionsPage from './pages/TransactionsPage';
 import ExpensesPage from './pages/ExpensesPage';
 import SubscriptionsPage from './pages/SubscriptionsPage';
 import RevenuesPage from './pages/revenues/RevenuesPage';
@@ -64,14 +63,6 @@ const App: React.FC = () => {
             element={
               <PrivateRoute>
                 <Dashboard />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/transactions"
-            element={
-              <PrivateRoute>
-                <TransactionsPage />
               </PrivateRoute>
             }
           />
