@@ -30,7 +30,7 @@ const savingsGoalSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['ACTIVE', 'COMPLETED', 'CANCELLED'],
+    enum: ['ACTIVE', 'COMPLETED', 'CANCELLED', 'FAILED'],
     default: 'ACTIVE'
   },
   createdAt: {
@@ -56,8 +56,8 @@ savingsGoalSchema.index({ user: 1, deadline: 1 });
 savingsGoalSchema.methods.checkStatus = function() {
   const now = new Date();
   
-  // Si l'objectif est déjà complété, ne rien faire
-  if (this.status === 'COMPLETED') {
+  // Si l'objectif est déjà complété ou annulé, ne rien faire
+  if (this.status === 'COMPLETED' || this.status === 'CANCELLED') {
     return;
   }
 
@@ -73,8 +73,8 @@ savingsGoalSchema.methods.checkStatus = function() {
     return;
   }
 
-  // Sinon, l'objectif est en cours
-  this.status = 'IN_PROGRESS';
+  // Sinon, l'objectif est actif
+  this.status = 'ACTIVE';
 };
 
 module.exports = mongoose.model('SavingsGoal', savingsGoalSchema); 
