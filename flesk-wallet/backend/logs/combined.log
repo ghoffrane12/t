@@ -722,3 +722,303 @@
 {"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:09:34"}
 {"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:09:34"}
 {"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:09:34"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:24:05"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:24:05"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:24:05"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:24:05"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:24:06"}
+{"level":"info","message":"8 abonnements trouvés","timestamp":"2025-05-22 19:24:06"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:24:06"}
+{"level":"info","message":"8 abonnements trouvés","timestamp":"2025-05-22 19:24:06"}
+{"amount":50,"category":"Services Cloud","description":"jh","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"j","startDate":"2025-04-24","timestamp":"2025-05-22 19:24:30"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:24:30"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:24:30"}
+{"level":"info","message":"Date du prochain paiement mise à jour:","timestamp":"2025-05-22 19:24:30"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:24:30"}
+{"level":"info","message":"9 abonnements trouvés","timestamp":"2025-05-22 19:24:30"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"9 abonnements trouvés","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"9 abonnements trouvés","timestamp":"2025-05-22 19:24:35"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:24:39"}
+{"level":"info","message":"9 abonnements trouvés","timestamp":"2025-05-22 19:24:39"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:24:39"}
+{"level":"info","message":"9 abonnements trouvés","timestamp":"2025-05-22 19:24:39"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:25:22"}
+{"level":"info","message":"9 abonnements trouvés","timestamp":"2025-05-22 19:25:22"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:25:22"}
+{"level":"info","message":"9 abonnements trouvés","timestamp":"2025-05-22 19:25:22"}
+{"amount":50,"category":"Assurance","description":"jh","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"jhg","startDate":"2025-04-04","timestamp":"2025-05-22 19:25:42"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:25:42"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:25:42"}
+{"level":"info","message":"Date du prochain paiement mise à jour:","timestamp":"2025-05-22 19:25:42"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:25:42"}
+{"level":"info","message":"10 abonnements trouvés","timestamp":"2025-05-22 19:25:42"}
+{"amount":29.99,"category":"Divertissement","description":"Abonnement Netflix","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"Netflixxxxx","nextPaymentDate":"2025-05-24","startDate":"2025-04-24","timestamp":"2025-05-22 19:26:48"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:26:48"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:26:48"}
+{"level":"info","message":"Date du prochain paiement mise à jour:","timestamp":"2025-05-22 19:26:48"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:28:21"}
+{"level":"info","message":"11 abonnements trouvés","timestamp":"2025-05-22 19:28:21"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:28:21"}
+{"level":"info","message":"11 abonnements trouvés","timestamp":"2025-05-22 19:28:21"}
+{"level":"info","message":"Début vérification des abonnements à renouveler","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"4 abonnements à renouveler dans 2 jours trouvés","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:31:16","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:31:16","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:31:16","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:31:16","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Vérification des abonnements terminée avec succès","timestamp":"2025-05-22 19:31:16"}
+{"level":"info","message":"Début vérification des abonnements à renouveler","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"4 abonnements à renouveler dans 2 jours trouvés","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:32:38","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:32:38","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:32:38","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:32:38","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Vérification des abonnements terminée avec succès","timestamp":"2025-05-22 19:32:38"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"11 abonnements trouvés","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"11 abonnements trouvés","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:32:57"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:33:47"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:33:47"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:33:47"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:33:47"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:33:47"}
+{"level":"info","message":"11 abonnements trouvés","timestamp":"2025-05-22 19:33:47"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:33:47"}
+{"level":"info","message":"11 abonnements trouvés","timestamp":"2025-05-22 19:33:47"}
+{"amount":20,"category":"Divertissement","description":"jh","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"a","startDate":"2025-04-24","timestamp":"2025-05-22 19:34:04"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:34:04"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:34:04"}
+{"level":"info","message":"Date du prochain paiement mise à jour:","timestamp":"2025-05-22 19:34:04"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:34:04"}
+{"level":"info","message":"12 abonnements trouvés","timestamp":"2025-05-22 19:34:04"}
+{"level":"info","message":"Début vérification des abonnements à renouveler","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"5 abonnements à renouveler dans 2 jours trouvés","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:34:11","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:34:11","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:34:11","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:34:11","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:34:11","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Vérification des abonnements terminée avec succès","timestamp":"2025-05-22 19:34:11"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:40:34"}
+{"level":"info","message":"12 abonnements trouvés","timestamp":"2025-05-22 19:40:34"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:40:34"}
+{"level":"info","message":"12 abonnements trouvés","timestamp":"2025-05-22 19:40:34"}
+{"amount":5,"category":"Assurance","description":"jhg","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"kjhg","startDate":"2025-04-24","timestamp":"2025-05-22 19:40:48"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:40:48"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:40:48"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:40:48"}
+{"level":"info","message":"Date du prochain paiement mise à jour:","timestamp":"2025-05-22 19:40:48"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:40:48"}
+{"level":"info","message":"13 abonnements trouvés","timestamp":"2025-05-22 19:40:48"}
+{"amount":29.99,"category":"Divertissement","description":"Abonnement Netflix","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"Netxx","nextPaymentDate":"2025-05-24","startDate":"2025-04-24","timestamp":"2025-05-22 19:41:34"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:41:34"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:34"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:41:34"}
+{"level":"info","message":"Date du prochain paiement mise à jour:","timestamp":"2025-05-22 19:41:34"}
+{"level":"info","message":"Début vérification des abonnements à renouveler","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"7 abonnements à renouveler dans 2 jours trouvés","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:41:53","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:41:53","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:41:53","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:41:53","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:41:53","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:41:53","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification pour abonnement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:41:53","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Notification créée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Vérification des abonnements terminée avec succès","timestamp":"2025-05-22 19:41:53"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:45:38"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:45:38"}
+{"level":"info","message":"14 abonnements trouvés","timestamp":"2025-05-22 19:45:38"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:45:38"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:45:38"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:45:38"}
+{"level":"info","message":"14 abonnements trouvés","timestamp":"2025-05-22 19:45:38"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:45:38"}
+{"amount":100,"category":"Salle de sport","description":"kjkhg","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"vcss","startDate":"2025-04-24","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"Date du prochain paiement mise à jour pour la prochaine échéance:","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:46:00","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:00"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:23"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:23"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:24"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:24"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:24"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:24"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:24"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:24"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:38"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:43"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:43"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:43"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:43"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:44"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:44"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:44"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:44"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:46:53"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:47:01"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:47:12"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:27"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:47:27"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:27"}
+{"level":"info","message":"15 abonnements trouvés","timestamp":"2025-05-22 19:47:27"}
+{"amount":5,"category":"Téléphonie","description":"fff","frequency":"monthly","isActive":true,"level":"info","message":"Création nouvel abonnement avec données:","name":"nam","startDate":"2025-04-24","timestamp":"2025-05-22 19:47:42"}
+{"level":"info","message":"Abonnement créé avec succès:","timestamp":"2025-05-22 19:47:43"}
+{"level":"info","message":"Première dépense créée pour l'abonnement:","timestamp":"2025-05-22 19:47:43"}
+{"level":"info","message":"Date du prochain paiement mise à jour pour la prochaine échéance:","timestamp":"2025-05-22 19:47:43"}
+{"level":"info","message":"Création notification rappel paiement:","timestamp":"2025-05-22 19:47:43"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-22 19:47:43","title":"Rappel de paiement","type":"abonnement","userId":"682c99ee3de83126faf4d74c"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-22 19:47:43"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:43"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 19:47:43"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 19:47:49"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:51"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 19:47:51"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:47:51"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 19:47:51"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 19:59:53"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 20:00:01"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 20:00:01"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 20:00:01"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 20:00:01"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-22 20:00:01"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-22 20:00:01"}
+{"level":"info","message":"5 objectifs trouvés","timestamp":"2025-05-22 20:00:01"}
+{"level":"info","message":"16 abonnements trouvés","timestamp":"2025-05-22 20:00:01"}

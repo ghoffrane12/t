@@ -73,7 +73,26 @@ const createPaymentReminderNotification = async (userId, subscription) => {
   try {
     logger.info('Création notification rappel paiement:', subscription._id);
     const title = 'Rappel de paiement';
-    const message = `Votre abonnement "${subscription.name}" sera renouvelé dans 2 jours (${new Date(subscription.nextPaymentDate).toLocaleDateString('fr-FR')}). Montant: ${subscription.amount} DT`;
+    
+    const now = new Date();
+    const nextPaymentDate = new Date(subscription.nextPaymentDate);
+    
+    const diffTime = nextPaymentDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    let message;
+    if (diffDays === 0) {
+      message = `Votre abonnement "${subscription.name}" sera renouvelé aujourd\'hui. Montant: ${subscription.amount} DT`;
+    } else if (diffDays === 1) {
+      message = `Votre abonnement "${subscription.name}" sera renouvelé demain. Montant: ${subscription.amount} DT`;
+    } else if (diffDays === 2) {
+      message = `Votre abonnement "${subscription.name}" sera renouvelé dans 2 jours (${nextPaymentDate.toLocaleDateString('fr-FR')}). Montant: ${subscription.amount} DT`;
+    } else {
+       // Cas par défaut si nécessaire, ou on ne crée pas de notification ici si ce n'est pas aujourd'hui, demain ou J+2
+       // Pour l'instant, on garde le message J+2 comme fallback si la différence est > 2 mais ce n'est pas idéal. Ajustons cela.
+       return null; // Ne crée pas de notification si l'échéance n'est pas aujourd'hui, demain ou J+2
+    }
+
     return await createNotification(userId, 'abonnement', title, message);
   } catch (error) {
     logger.error('Erreur lors de la création de la notification de rappel de paiement:', error);
