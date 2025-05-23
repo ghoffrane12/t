@@ -67,4 +67,8 @@ export const getCurrentUser = () => {
 
 export const isAuthenticated = () => {
   return !!localStorage.getItem('token');
+};
+
+export const getToken = (): string | null => {
+  return localStorage.getItem('token');
 }; 

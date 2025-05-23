@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const app = require('./app');
-require('./cron/notificationCron'); // Importation du fichier cron
+//require('./cron/notificationCron'); // Importation du fichier cron
+app.use('/api/debug', require('./routes/debug'));
 
 // Configuration MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flesk-wallet', {

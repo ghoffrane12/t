@@ -5,15 +5,17 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 
+// ➕ Import de la fonction de génération de dépenses
+const generateExpenses = require('../scripts/expensesByUser');
+
 // Route d'inscription
 router.post('/register', async (req, res) => {
   try {
     console.log('Début de l\'inscription');
-    console.log("Contenu reçu dans le body :", req.body); // 👉 AJOUTE CETTE LIGNE ICI
+    console.log("Contenu reçu dans le body :", req.body);
 
     const { email, password, firstName, lastName } = req.body;
 
-    // Validation des champs requis
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({
         success: false,
@@ -27,7 +29,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Validation du format d'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
@@ -36,7 +37,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Validation de la force du mot de passe
     if (password.length < 8) {
       return res.status(400).json({
         success: false,
@@ -44,7 +44,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Vérifier si l'utilisateur existe déjà
     let user = await User.findOne({ email });
     if (user) {
       return res.status(409).json({
@@ -53,7 +52,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Créer un nouvel utilisateur
     user = new User({
       email,
       password,
@@ -65,7 +63,10 @@ router.post('/register', async (req, res) => {
     await user.save();
     console.log('Utilisateur sauvegardé avec succès');
 
-    // Créer et retourner le token JWT
+    // ✅ GÉNÉRATION AUTOMATIQUE DES DÉPENSES
+    await generateExpenses(user._id);
+    console.log('Dépenses générées automatiquement pour le nouvel utilisateur.');
+
     const payload = {
       user: {
         id: user.id
@@ -118,7 +119,6 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validation des champs requis
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -130,7 +130,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Vérifier si l'utilisateur existe
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
@@ -139,7 +138,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Vérifier si le compte est bloqué
     if (user.loginAttempts >= 5 && user.lockUntil > Date.now()) {
       const remainingTime = Math.ceil((user.lockUntil - Date.now()) / 1000 / 60);
       return res.status(403).json({
@@ -149,13 +147,11 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Vérifier le mot de passe
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      // Incrémenter les tentatives de connexion
       user.loginAttempts += 1;
       if (user.loginAttempts >= 5) {
-        user.lockUntil = Date.now() + 30 * 60 * 1000; // Blocage pendant 30 minutes
+        user.lockUntil = Date.now() + 30 * 60 * 1000;
       }
       await user.save();
 
@@ -166,12 +162,10 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Réinitialiser les tentatives de connexion en cas de succès
     user.loginAttempts = 0;
     user.lockUntil = undefined;
     await user.save();
 
-    // Créer et retourner le token JWT
     const payload = {
       user: {
         id: user.id
@@ -331,7 +325,6 @@ router.delete('/me', protect, async (req, res) => {
         message: 'Utilisateur non trouvé.'
       });
     }
-    // (Optionnel) Supprimer les données associées ici (budgets, transactions, etc.)
     res.json({
       success: true,
       message: 'Compte supprimé avec succès.'
@@ -345,4 +338,4 @@ router.delete('/me', protect, async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;
