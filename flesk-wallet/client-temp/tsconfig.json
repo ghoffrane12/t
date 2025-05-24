@@ -18,7 +18,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "src",                           // ✅ ajoute cette ligne
+    "paths": {
+      "@/*": ["*"]                             // ✅ et celle-ci
+    }
   },
   "include": [
     "src"
