@@ -13,7 +13,8 @@ import {
   Button,
   ListItemIcon,
   AppBar,
-  Toolbar
+  Toolbar,
+  Container
 } from '@mui/material';
 import {
   TrendingDown as ExpensesIcon,
@@ -40,10 +41,16 @@ import { getRecentTransactions, Transaction } from '../services/transactionServi
 import { getRevenues } from '../services/revenuesService';
 import BudgetSummary from '../components/BudgetSummary';
 import { getBudgets, Budget } from '../services/budgetService';
-import ChatbotWidget from '../components/ChatbotWidget';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import BarPredictionChart from '../components/Charts/ExpensePredictionBarChart';
-import { getNextMonthPredictions } from '../services/predictionService';
+import PredictionBarChart from '../components/PredictionBarChart';
+import axios from "axios";
+
+interface Prediction {
+  category: string;
+  predicted_total: number;
+  explanation?: string;
+  error?: string;
+}
 
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
@@ -53,9 +60,9 @@ const Dashboard: React.FC = () => {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [showPredictions, setShowPredictions] = useState(false);
-  const [predictions, setPredictions] = useState<{ category: string; amount: number }[]>([]);
-  
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
@@ -69,7 +76,6 @@ const Dashboard: React.FC = () => {
     fetchExpenses();
     getSavingsGoals().then(setGoals);
     getBudgets().then(setBudgets);
-    // Fusionne les 6 dernières opérations (dépenses + revenus)
     const fetchTransactions = async () => {
       const expenses = (await getExpenses()).map(e => ({
         id: e._id ?? '',
@@ -89,6 +95,7 @@ const Dashboard: React.FC = () => {
         currency: 'TND',
         type: 'revenu' as const
       }));
+      
       const all = [...expenses, ...revenues]
         .filter(t => !!t.id)
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -113,7 +120,6 @@ const Dashboard: React.FC = () => {
   const fetchExpenses = async () => {
     try {
       const data = await getExpenses();
-      // Regrouper par catégorie
       const byCategory: { [key: string]: number } = {};
       data.forEach(exp => {
         byCategory[exp.category] = (byCategory[exp.category] || 0) + exp.amount;
@@ -128,10 +134,20 @@ const Dashboard: React.FC = () => {
       // Optionnel: gestion d'erreur
     }
   };
+
   useEffect(() => {
+    const fetchPredictions = async () => {
+      try {
+        const res = await axios.get("/api/predict");
+        setPredictions(res.data.predictions || []);
+      } catch (err) {
+        console.error("Erreur chargement des prédictions", err);
+      }
+    };
+  
     fetchPredictions();
   }, []);
-
+  
   
   const formatAmount = (amount: number) => {
     return amount.toLocaleString('fr-FR', {
@@ -180,16 +196,6 @@ const Dashboard: React.FC = () => {
     navigate('/settings');
   };
 
-  const fetchPredictions = async () => {
-    try {
-      const response = await getNextMonthPredictions();
-      setPredictions(response); //
-        
-    } catch (error) {
-      console.error('Error fetching predictions:', error);
-    }
-  };
-
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8F9FA' }}>
       <Sidebar />
@@ -218,7 +224,6 @@ const Dashboard: React.FC = () => {
           </Toolbar>
         </AppBar>
 
-        {/* Titre de la page */}
         <Box sx={{ p: 3 }}>
           <Typography variant="h4" sx={{ color: '#000000', mb: 1, fontWeight: 500 }}>
             Tableau de bord
@@ -239,7 +244,6 @@ const Dashboard: React.FC = () => {
             </Box>
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              {/* Solde total */}
               <Paper 
                 sx={{ 
                   p: 4,
@@ -268,9 +272,7 @@ const Dashboard: React.FC = () => {
                 </Typography>
               </Paper>
 
-              {/* Grille des autres totaux */}
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 3 }}>
-                {/* Total des dépenses */}
                 <Paper 
                   sx={{ 
                     p: 3, 
@@ -291,7 +293,6 @@ const Dashboard: React.FC = () => {
                   </Typography>
                 </Paper>
 
-                {/* Total des revenus */}
                 <Paper 
                   sx={{ 
                     p: 3, 
@@ -312,7 +313,6 @@ const Dashboard: React.FC = () => {
                   </Typography>
                 </Paper>
 
-                {/* Total des abonnements */}
                 <Paper 
                   sx={{ 
                     p: 3, 
@@ -347,28 +347,40 @@ const Dashboard: React.FC = () => {
               <Grid item xs={12}>
                 <ExpenseIncomeChart />
               </Grid>
+              
+              <Container sx={{ mt: 4 }}>
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={() => setShowPredictions(!showPredictions)}
+    sx={{ mb: 2 }}
+  >
+    {showPredictions ? 'Masquer les prédictions' : 'Afficher les prédictions'}
+  </Button>
 
-              <Box sx={{ mb: 3 }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    if (!showPredictions) fetchPredictions();
-                    setShowPredictions(prev => !prev);
-                  }}
-                >
-                  {showPredictions ? 'Masquer les prédictions' : 'Afficher les prédictions'}
-                </Button>
-              </Box>
+  {showPredictions && (
+    <>
+      <Box sx={{ mb: 4 }}>
+        <PredictionBarChart predictions={predictions} />
+      </Box>
+      <Box>
+        {predictions.map((p, index) => (
+          <Paper key={index} sx={{ p: 2, mb: 2, borderLeft: '5px solid #42a5f5' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              {p.category} :
+            </Typography>
+            <Typography variant="body2">
+              {p.explanation || p.error || 'Aucune explication disponible.'}
+            </Typography>
+          </Paper>
+        ))}
+      </Box>
+    </>
+      )}
+    </Container>
 
-              {showPredictions && (
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                    Prédiction des dépenses du mois prochain par catégorie
-                  </Typography>
-                  <BarPredictionChart predictions={predictions} />
-                </Box>
-              )}
+
+  
 
               <Box sx={{ display: 'flex', gap: 3 }}>
                 <Box sx={{ flex: 1 }}>
@@ -381,7 +393,6 @@ const Dashboard: React.FC = () => {
             </Box>
           )}
         </Box>
-        <ChatbotWidget />
       </Box>
     </Box>
   );
