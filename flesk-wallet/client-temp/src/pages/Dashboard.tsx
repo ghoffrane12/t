@@ -41,7 +41,6 @@ import { getRecentTransactions, Transaction } from '../services/transactionServi
 import { getRevenues } from '../services/revenuesService';
 import BudgetSummary from '../components/BudgetSummary';
 import { getBudgets, Budget } from '../services/budgetService';
-import ChatbotWidget from '../components/ChatbotWidget';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PredictionBarChart from '../components/PredictionBarChart';
 import axios from "axios";
@@ -377,8 +376,8 @@ const Dashboard: React.FC = () => {
         ))}
       </Box>
     </>
-  )}
-</Container>
+      )}
+    </Container>
 
 
   
@@ -394,9 +393,8 @@ const Dashboard: React.FC = () => {
             </Box>
           )}
         </Box>
-        <ChatbotWidget />
-      </Box> 
-    </Box>   
+      </Box>
+    </Box>
   );
 };
 
