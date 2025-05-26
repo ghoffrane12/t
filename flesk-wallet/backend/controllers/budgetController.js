@@ -174,10 +174,6 @@ exports.deductFromBudget = async (req, res) => {
       budget.status = 'COMPLETED';
     }
 
-    // Mettre à jour le montant dépensé
-    budget.currentSpending += amount;
-    budget.remainingAmount -= amount;
-
     // Vérifier si le budget est dépassé (plus de 90% utilisé)
     if (budget.currentSpending / budget.amount >= 0.9) {
       await createBudgetExceededNotification(req.user.id, budget);
