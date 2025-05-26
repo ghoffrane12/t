@@ -183,7 +183,7 @@ const Dashboard: React.FC = () => {
   const fetchPredictions = async () => {
     try {
       const response = await getNextMonthPredictions();
-    setPredictions(response); //
+      setPredictions(response); //
         
     } catch (error) {
       console.error('Error fetching predictions:', error);
