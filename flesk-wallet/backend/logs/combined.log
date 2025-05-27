@@ -1580,3 +1580,63 @@
 {"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 00:06:54"}
 {"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 00:06:54"}
 {"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 00:06:54"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"0 objectifs trouvés","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"0 objectifs trouvés","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 14:37:30"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:18:26"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:18:26"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:18:26"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:18:26"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:27"}
+{"level":"info","message":"0 objectifs trouvés","timestamp":"2025-05-27 15:18:27"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:27"}
+{"level":"info","message":"0 objectifs trouvés","timestamp":"2025-05-27 15:18:27"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:18:33"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:18:33"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:18:33"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:18:33"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:34"}
+{"level":"info","message":"0 objectifs trouvés","timestamp":"2025-05-27 15:18:34"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:34"}
+{"level":"info","message":"0 objectifs trouvés","timestamp":"2025-05-27 15:18:34"}
+{"category":"Voiture","currentAmount":5,"deadline":"2025-05-27","level":"info","message":"Création nouvel objectif avec données:","targetAmount":50,"timestamp":"2025-05-27 15:18:47","title":"aaa"}
+{"level":"info","message":"Objectif créé avec succès:","timestamp":"2025-05-27 15:18:47"}
+{"level":"info","message":"Objectif échoué, création notification","timestamp":"2025-05-27 15:18:47"}
+{"level":"info","message":"Création notification échec objectif:","timestamp":"2025-05-27 15:18:47"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-27 15:18:47","title":"Objectif non atteint","type":"objectif_echoue","userId":"6813acc0601b4f1564adf3db"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-27 15:18:47"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:47"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:18:47"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:51"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:18:51"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:51"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:18:51"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:56"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:18:56"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:18:56"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:18:56"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:19:02"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:19:02"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:19:02"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:19:02"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:19:05"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:40:39"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:40:39"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:40:39"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:40:39"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 15:40:39"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 15:40:39"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:40:39"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:40:39"}
