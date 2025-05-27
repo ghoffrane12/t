@@ -26,7 +26,7 @@ app.use('/api/notifications', require('./routes/Notifications'));
 app.use('/api/chatbot', require('./routes/chatbot'));
 app.use('/api/budgets', require('./routes/Budgets'));
 app.use('/api/savings', require('./routes/savings'));
-//.use('/api/prediction', require('./routes/prediction')); // ✅ Route ajoutée ici
+//app.use('/api/prediction', require('./routes/prediction')); // ✅ Route ajoutée ici
 app.use('/api/predict', require('./routes/predict'));
 
 app.use((err, req, res, next) => {

@@ -9,11 +9,18 @@ class ExpensePredictor:
 
     def prepare_data(self, expenses):
         if not expenses or len(expenses) < 2:
-            return None  # On autorise les prévisions même avec 2 points
+            return None
+        
         df = pd.DataFrame(expenses)
         df.columns = ['ds', 'y']
         df['ds'] = pd.to_datetime(df['ds'])
+
+        # 🔍 Nettoyage des NaN et valeurs infinies
+        df = df.dropna()
+        df = df[np.isfinite(df['y'])]
+
         return df
+
 
     def predict_by_category(self, all_expenses_by_category):
         results = []
