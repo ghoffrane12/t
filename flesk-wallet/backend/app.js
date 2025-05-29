@@ -23,7 +23,6 @@ app.use('/api/expenses', require('./routes/expenseRoutes'));
 app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 app.use('/api/revenues', require('./routes/revenueRoutes'));
 app.use('/api/notifications', require('./routes/Notifications'));
-app.use('/api/chatbot', require('./routes/chatbot'));
 app.use('/api/budgets', require('./routes/Budgets'));
 app.use('/api/savings', require('./routes/savings'));
 //.use('/api/prediction', require('./routes/prediction')); // ✅ Route ajoutée ici

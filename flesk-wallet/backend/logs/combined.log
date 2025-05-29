@@ -1651,3 +1651,79 @@
 {"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 15:40:39"}
 {"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 15:40:39"}
 >>>>>>> imen03
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 16:52:20"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:52:36"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 16:52:36"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:52:36"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 16:52:36"}
+{"category":"Voyage","currentAmount":500,"deadline":"2025-08-27","level":"info","message":"Création nouvel objectif avec données:","targetAmount":5000,"timestamp":"2025-05-27 16:53:01","title":"voyage à Paris"}
+{"level":"info","message":"Objectif créé avec succès:","timestamp":"2025-05-27 16:53:01"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:53:01"}
+{"level":"info","message":"2 objectifs trouvés","timestamp":"2025-05-27 16:53:01"}
+{"0":"6","1":"8","10":"2","11":"7","12":"c","13":"6","14":"4","15":"9","16":"c","17":"6","18":"8","19":"5","2":"3","20":"6","21":"e","22":"1","23":"b","3":"5","4":"c","5":"9","6":"c","7":"7","8":"3","9":"e","level":"info","message":"Suppression objectif:","timestamp":"2025-05-27 16:53:09"}
+{"level":"info","message":"Objectif supprimé avec succès","timestamp":"2025-05-27 16:53:09"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:53:09"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 16:53:10"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 16:53:11"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 16:53:11"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-27 16:53:11"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-27 16:53:11"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:53:16"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 16:53:16"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:53:16"}
+{"level":"info","message":"1 objectifs trouvés","timestamp":"2025-05-27 16:53:16"}
+{"category":"Technologie","currentAmount":250,"deadline":"2026-05-27","level":"info","message":"Création nouvel objectif avec données:","targetAmount":4000,"timestamp":"2025-05-27 16:53:38","title":"iphone 15"}
+{"level":"info","message":"Objectif créé avec succès:","timestamp":"2025-05-27 16:53:38"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:53:38"}
+{"level":"info","message":"2 objectifs trouvés","timestamp":"2025-05-27 16:53:38"}
+{"category":"Voiture","currentAmount":500,"deadline":"2027-05-27","level":"info","message":"Création nouvel objectif avec données:","targetAmount":20000,"timestamp":"2025-05-27 16:57:25","title":"ford F150 xl"}
+{"level":"info","message":"Objectif créé avec succès:","timestamp":"2025-05-27 16:57:25"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:57:25"}
+{"level":"info","message":"3 objectifs trouvés","timestamp":"2025-05-27 16:57:25"}
+{"category":"Technologie","currentAmount":1000,"deadline":"2025-05-27","level":"info","message":"Création nouvel objectif avec données:","targetAmount":1000,"timestamp":"2025-05-27 16:57:52","title":"Ipad "}
+{"level":"info","message":"Objectif créé avec succès:","timestamp":"2025-05-27 16:57:52"}
+{"level":"info","message":"Objectif atteint, création notification","timestamp":"2025-05-27 16:57:52"}
+{"level":"info","message":"Création notification objectif atteint:","timestamp":"2025-05-27 16:57:52"}
+{"level":"info","message":"Création notification:","timestamp":"2025-05-27 16:57:52","title":"Objectif atteint !","type":"objectif_atteint","userId":"6813acc0601b4f1564adf3db"}
+{"level":"info","message":"Notification créée avec succès:","timestamp":"2025-05-27 16:57:52"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-27 16:57:52"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-27 16:57:52"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:55:57"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:56:45"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:56:55"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:57:16"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:57:16"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:57:16"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:57:16"}
+{"level":"info","message":"Récupération des objectifs pour user:","timestamp":"2025-05-29 20:57:16"}
+{"level":"info","message":"Récupération des abonnements pour user:","timestamp":"2025-05-29 20:57:16"}
+{"level":"info","message":"4 objectifs trouvés","timestamp":"2025-05-29 20:57:16"}
+{"level":"info","message":"1 abonnements trouvés","timestamp":"2025-05-29 20:57:16"}
