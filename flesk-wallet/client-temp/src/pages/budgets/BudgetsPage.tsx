@@ -63,6 +63,8 @@ const BudgetsPage: React.FC = () => {
   const [deductDialogOpen, setDeductDialogOpen] = useState(false);
   const [selectedBudgetForDeduction, setSelectedBudgetForDeduction] = useState<Budget | null>(null);
   const [deductionAmount, setDeductionAmount] = useState<number>(0);
+  const [showExceedWarning, setShowExceedWarning] = useState(false);
+  const [exceedWarningMessage, setExceedWarningMessage] = useState('');
   const [newBudget, setNewBudget] = useState<BudgetCreatePayload>({
     name: '',
     amount: 0,
@@ -75,6 +77,9 @@ const BudgetsPage: React.FC = () => {
     description: '',
     tags: []
   });
+  const [categoryExistsError, setCategoryExistsError] = useState<string | null>(null);
+  const [showExistingBudgetModal, setShowExistingBudgetModal] = useState<boolean>(false);
+  const [existingBudgetCategory, setExistingBudgetCategory] = useState<string>('');
 
   // Récupérer les budgets au montage
   useEffect(() => { fetchBudgets(); }, []);
@@ -120,17 +125,32 @@ const BudgetsPage: React.FC = () => {
   };
 
   const handleAddBudget = async () => {
+    // Check for existing active budget with the same category
+    const existingBudget = budgets.find(
+      (budget) => budget.category === newBudget.category && budget.status === 'ACTIVE'
+    );
+
+    if (existingBudget) {
+      // setError(`Il existe déjà un budget actif pour la catégorie "${newBudget.category}".`);
+      // setLoading(false);
+      // return; // Stop here if duplicate found
+      setExistingBudgetCategory(newBudget.category);
+      setShowExistingBudgetModal(true);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
+
       const token = localStorage.getItem('token');
       if (!token) {
         setError('Utilisateur non authentifié');
         setLoading(false);
         return;
       }
-      await createBudget({ ...newBudget });
-      await fetchBudgets();
+      const data = await createBudget({ ...newBudget });
+      setBudgets([...budgets, data]);
       setOpenDialog(false);
       resetBudgetForm();
     } catch (err) {
@@ -189,28 +209,49 @@ const BudgetsPage: React.FC = () => {
   const handleOpenDeductDialog = (budget: Budget) => {
     setSelectedBudgetForDeduction(budget);
     setDeductionAmount(0);
+    setShowExceedWarning(false);
+    setExceedWarningMessage('');
     setDeductDialogOpen(true);
   };
 
-  const handleDeduction = async () => {
+  const handleDeductFromBudget = async () => {
     if (!selectedBudgetForDeduction || deductionAmount <= 0) return;
+
+    if (deductionAmount > selectedBudgetForDeduction.remainingAmount) {
+      setExceedWarningMessage(
+        `Le montant à déduire (${deductionAmount.toLocaleString('fr-TN')} DT) dépasse le montant restant (${selectedBudgetForDeduction.remainingAmount.toLocaleString('fr-TN')} DT) pour "${selectedBudgetForDeduction.name}".\nVoulez-vous modifier le montant à déduire ?`
+      );
+      setShowExceedWarning(true);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
-      if (deductionAmount > selectedBudgetForDeduction.remainingAmount) {
-        setError('Le montant à déduire ne peut pas être supérieur au montant restant');
-        return;
-      }
       const updatedBudget = await deductFromBudget(selectedBudgetForDeduction.id, deductionAmount);
       setBudgets(prevBudgets => prevBudgets.map(budget => budget.id === updatedBudget.id ? updatedBudget : budget));
       setDeductDialogOpen(false);
       setSelectedBudgetForDeduction(null);
       setDeductionAmount(0);
+      setShowExceedWarning(false);
+      setExceedWarningMessage('');
     } catch (err) {
       setError('Erreur lors de la déduction du montant');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCloseDeductDialog = () => {
+    setDeductDialogOpen(false);
+    setShowExceedWarning(false);
+    setExceedWarningMessage('');
+    setSelectedBudgetForDeduction(null);
+    setDeductionAmount(0);
+  };
+
+  const handleChangeAmountClick = () => {
+    setShowExceedWarning(false);
   };
 
   const getProgressColor = (budget: Budget) => {
@@ -293,7 +334,7 @@ const BudgetsPage: React.FC = () => {
         </Box>
       </Box>
       {/* Dialog de création de budget */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={openDialog} onClose={() => { setOpenDialog(false); resetBudgetForm(); setShowExistingBudgetModal(false); }} maxWidth="sm" fullWidth>
         <DialogTitle>Créer un nouveau budget</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
@@ -320,10 +361,23 @@ const BudgetsPage: React.FC = () => {
               {newBudget.tags.map((tag) => (<Chip key={tag} label={tag} onDelete={() => handleRemoveTag(tag)} sx={{ bgcolor: '#FF5733', color: 'white' }} />))}
             </Box>
           </Box>
+          {categoryExistsError && <Alert severity="error" sx={{ mt: 2, mb: 2 }}>{categoryExistsError}</Alert>}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => { setOpenDialog(false); resetBudgetForm(); }}>Annuler</Button>
           <Button onClick={handleAddBudget} variant="contained" sx={{ bgcolor: '#FF5733', color: 'white', '&:hover': { bgcolor: '#ff6b4a' } }}>Créer</Button>
+        </DialogActions>
+      </Dialog>
+      {/* Existing Budget Alert Dialog */}
+      <Dialog open={showExistingBudgetModal} onClose={() => setShowExistingBudgetModal(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Catégorie existante</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            {`Il existe déjà un budget actif pour la catégorie "${existingBudgetCategory}".`}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowExistingBudgetModal(false)} color="primary">Fermer</Button>
         </DialogActions>
       </Dialog>
       {/* Dialog d'édition de budget */}
@@ -360,15 +414,42 @@ const BudgetsPage: React.FC = () => {
           <Button onClick={handleUpdateBudget} variant="contained" sx={{ bgcolor: '#FF5733', color: 'white', '&:hover': { bgcolor: '#ff6b4a' } }}>Enregistrer</Button>
         </DialogActions>
       </Dialog>
-      {/* Dialog de déduction */}
-      <Dialog open={deductDialogOpen} onClose={() => setDeductDialogOpen(false)} maxWidth="xs" fullWidth>
+      {/* Deduction Dialog */}
+      <Dialog open={deductDialogOpen} onClose={handleCloseDeductDialog} maxWidth="xs" fullWidth>
         <DialogTitle>Déduire un montant</DialogTitle>
         <DialogContent>
-          <TextField label="Montant à déduire (DT)" type="number" fullWidth value={deductionAmount} onChange={(e) => setDeductionAmount(Number(e.target.value))} sx={{ mt: 2 }} />
+          {showExceedWarning ? (
+            <Box>
+              <Alert severity="warning" sx={{ mb: 2 }}>
+                {exceedWarningMessage}
+              </Alert>
+            </Box>
+          ) : (
+            <TextField
+              label={`Montant à déduire (DT) (Max: ${selectedBudgetForDeduction?.remainingAmount.toLocaleString('fr-TN')})`}
+              type="number"
+              fullWidth
+              value={deductionAmount}
+              onChange={(e) => setDeductionAmount(Number(e.target.value))}
+              sx={{ mt: 2 }}
+              error={showExceedWarning}
+              helperText={showExceedWarning ? 'Veuillez modifier le montant.' : ''}
+            />
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeductDialogOpen(false)}>Annuler</Button>
-          <Button onClick={handleDeduction} variant="contained" sx={{ bgcolor: '#FF5733', color: 'white', '&:hover': { bgcolor: '#ff6b4a' } }}>Déduire</Button>
+          {showExceedWarning ? (
+            <Button onClick={handleChangeAmountClick} variant="contained" sx={{ bgcolor: '#FF5733', color: 'white', '&:hover': { bgcolor: '#ff6b4a' } }}>
+              Changer le montant
+            </Button>
+          ) : (
+            <>
+              <Button onClick={handleCloseDeductDialog}>Annuler</Button>
+              <Button onClick={handleDeductFromBudget} variant="contained" sx={{ bgcolor: '#FF5733', color: 'white', '&:hover': { bgcolor: '#ff6b4a' } }}>
+                Déduire
+              </Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </Box>
