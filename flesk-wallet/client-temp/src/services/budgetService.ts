@@ -2,10 +2,12 @@ import api from '../config/api';
 import axios from 'axios';
 
 export interface Budget {
-  id: string;
+  id: string; // Changé de _id à id
+  userId: string;
   name: string;
   amount: number;          // Montant initial du budget en DT
   remainingAmount: number; // Montant restant du budget en DT
+  currentSpent: number; // Montant actuellement dépensé
   category: string;
   period: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
   startDate: string;
@@ -41,7 +43,7 @@ export const getBudgets = async (): Promise<Budget[]> => {
     const response = await api.get('/budgets');
     return response.data.data.map((budget: any) => ({
       ...budget,
-      id: budget._id,
+      id: budget._id, // Conversion de _id en id
       remainingAmount: budget.remainingAmount ?? budget.amount
     }));
   } catch (error) {
@@ -57,7 +59,7 @@ export const createBudget = async (budgetData: BudgetCreatePayload): Promise<Bud
     const createdBudget = response.data.data;
     return {
       ...createdBudget,
-      id: createdBudget._id,
+      id: createdBudget._id, // Conversion de _id en id
       remainingAmount: createdBudget.remainingAmount ?? createdBudget.amount
     };
   } catch (error) {
@@ -73,7 +75,7 @@ export const updateBudget = async (id: string, budgetData: Partial<Budget>): Pro
     const updatedBudget = response.data.data;
     return {
       ...updatedBudget,
-      id: updatedBudget._id,
+      id: updatedBudget._id, // Conversion de _id en id
       remainingAmount: updatedBudget.remainingAmount ?? updatedBudget.amount
     };
   } catch (error) {
@@ -89,7 +91,7 @@ export const deductFromBudget = async (id: string, amount: number): Promise<Budg
     const updatedBudget = response.data.data;
     return {
       ...updatedBudget,
-      id: updatedBudget._id,
+      id: updatedBudget._id, // Conversion de _id en id
       remainingAmount: updatedBudget.amount - (updatedBudget.currentSpending || 0)
     };
   } catch (error) {

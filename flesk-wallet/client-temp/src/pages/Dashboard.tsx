@@ -52,6 +52,12 @@ interface Prediction {
   error?: string;
 }
 
+// Exemple de structure de données attendue par ExpensePieChart
+interface ExpenseDataForChart {
+  category: string;
+  amount: number;
+}
+
 const Dashboard: React.FC = () => {
   const [totals, setTotals] = useState<DashboardTotals | null>(null);
   const [loading, setLoading] = useState(false);

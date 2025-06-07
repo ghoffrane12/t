@@ -23,7 +23,7 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Erreur lors de la connexion');
+    throw new Error((error as any).response?.data?.message || 'Erreur lors de la connexion');
   }
 };
 
@@ -47,7 +47,7 @@ export const register = async (
 
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Erreur lors de l\'inscription');
+    throw new Error((error as any).response?.data?.message || 'Erreur lors de l\'inscription');
   }
 };
 
