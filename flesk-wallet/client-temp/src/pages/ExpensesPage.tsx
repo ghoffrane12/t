@@ -98,31 +98,42 @@ const ExpensesPage: React.FC = () => {
   };
 
   const handleAddExpense = async () => {
+    const trimmedDescription = newExpense.description.trim();
+    if (trimmedDescription === '') {
+      setError('La description de la dépense est obligatoire.');
+      return;
+    }
+
     try {
       setLoading(true);
       const existingBudget = await getBudgetByCategory(newExpense.category);
       
+      const expenseToCreate = { ...newExpense, description: trimmedDescription };
+
+      console.log('handleAddExpense - Sending description:', expenseToCreate.description);
+
       if (!existingBudget) {
-        setPendingExpense(newExpense);
-        setOpenBudgetPrompt(true);
+        setPendingExpense(expenseToCreate);
         setOpenDialog(false);
+        setOpenBudgetPrompt(true);
         setLoading(false);
         return;
       }
 
-      if (newExpense.amount > existingBudget.remainingAmount) {
+      if (expenseToCreate.amount > existingBudget.remainingAmount) {
         setOpenDepassementDialog(true);
-        setPendingExpense(newExpense);
+        setPendingExpense(expenseToCreate);
         setLoading(false);
         return;
       }
 
-      await createExpense(newExpense);
+      await createExpense(expenseToCreate);
       await fetchExpenses();
       setOpenDialog(false);
       resetForm();
     } catch (err) {
-      setError('Erreur lors de la création de la dépense');
+      console.error("Erreur complète de l'API lors de l'ajout de dépense:", (err as any).response?.data);
+      setError((err as any).response?.data?.message || 'Erreur lors de la création de la dépense');
       console.error(err);
     } finally {
       setLoading(false);
@@ -138,14 +149,16 @@ const ExpensesPage: React.FC = () => {
       };
       await createBudget(budgetData);
       if (pendingExpense) {
-        await createExpense(pendingExpense);
+        const expenseToCreate = { ...pendingExpense, description: pendingExpense.description.trim() };
+        console.log('handleCreateBudget - Sending description:', expenseToCreate.description);
+        await createExpense(expenseToCreate);
         await fetchExpenses();
       }
       setOpenBudgetForm(false);
       setOpenDialog(false);
       resetForm();
     } catch (err) {
-      setError('Erreur lors de la création du budget');
+      setError((err as any).response?.data?.message || 'Erreur lors de la création du budget');
       console.error(err);
     } finally {
       setLoading(false);
@@ -167,14 +180,23 @@ const ExpensesPage: React.FC = () => {
 
   const handleUpdateExpense = async () => {
     if (!selectedExpense) return;
+
+    const trimmedDescription = newExpense.description.trim();
+    if (trimmedDescription === '') {
+      setError('La description de la dépense est obligatoire.');
+      return;
+    }
+
     try {
       setLoading(true);
-      await updateExpense(selectedExpense._id!, newExpense);
+      const expenseToUpdate = { ...newExpense, description: trimmedDescription };
+      console.log('handleUpdateExpense - Sending description:', expenseToUpdate.description);
+      await updateExpense(selectedExpense._id!, expenseToUpdate);
       await fetchExpenses();
       setOpenDialog(false);
       resetForm();
     } catch (error) {
-      setError('Erreur lors de la mise à jour de la dépense');
+      setError((error as any).response?.data?.message || 'Erreur lors de la mise à jour de la dépense');
       console.error(error);
     } finally {
       setLoading(false);
@@ -187,7 +209,7 @@ const ExpensesPage: React.FC = () => {
       await deleteExpense(id);
       await fetchExpenses();
     } catch (err) {
-      setError('Erreur lors de la suppression de la dépense');
+      setError((err as any).response?.data?.message || 'Erreur lors de la suppression de la dépense');
       console.error(err);
     } finally {
       setLoading(false);
@@ -228,12 +250,22 @@ const ExpensesPage: React.FC = () => {
 
   const handleBudgetPromptCancel = async () => {
     if (pendingExpense) {
+      const trimmedDescription = pendingExpense.description.trim();
+      if (trimmedDescription === '') {
+        setError('La description de la dépense est obligatoire.');
+        setOpenBudgetPrompt(false);
+        setPendingExpense(null);
+        resetForm();
+        return;
+      }
       try {
         setLoading(true);
-        await createExpense(pendingExpense);
+        const expenseToCreate = { ...pendingExpense, description: trimmedDescription };
+        await createExpense(expenseToCreate);
         await fetchExpenses();
       } catch (err) {
-        setError('Erreur lors de la création de la dépense');
+        setError((err as any).response?.data?.message || 'Erreur lors de la création de la dépense après annulation budget');
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -256,7 +288,7 @@ const ExpensesPage: React.FC = () => {
       console.log('Données prédites:', data);
       
       if (!data || typeof data.globalPrediction !== 'number' || !data.categoryPredictions) {
-        throw new Error('Format de réponse invalide de l\'API');
+        throw new Error('Format de réponse invalide de l'API');
       }
       
       setPrediction(data);
@@ -270,15 +302,26 @@ const ExpensesPage: React.FC = () => {
 
   const handleDepassementConfirm = async () => {
     if (pendingExpense) {
+      const trimmedDescription = pendingExpense.description.trim();
+      if (trimmedDescription === '') {
+        setError('La description de la dépense est obligatoire.');
+        setOpenDepassementDialog(false);
+        setPendingExpense(null);
+        resetForm();
+        return;
+      }
       try {
         setLoading(true);
-        await createExpense(pendingExpense);
+        const expenseToCreate = { ...pendingExpense, description: trimmedDescription };
+        console.log('handleDepassementConfirm - Sending description:', expenseToCreate.description);
+        await createExpense(expenseToCreate);
         await fetchExpenses();
         setOpenDepassementDialog(false);
         setOpenDialog(false);
         resetForm();
       } catch (err) {
-        setError('Erreur lors de la création de la dépense');
+        console.error("Erreur complète de l'API lors de la confirmation de dépassement:", (err as any).response?.data);
+        setError((err as any).response?.data?.message || 'Erreur lors de la création de la dépense');
         console.error(err);
       } finally {
         setLoading(false);
@@ -423,10 +466,11 @@ const ExpensesPage: React.FC = () => {
                     <TextField
                       label="Description"
                       fullWidth
+                      required
                       multiline
                       rows={3}
                       value={newExpense.description}
-                      onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
+                      onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value.trim() }))}
                     />
                   </Box>
                 </DialogContent>

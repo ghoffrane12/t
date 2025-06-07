@@ -27,6 +27,23 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Autre': '#e17055',
 };
 
+// Fonction pour normaliser le nom de la catégorie
+const normalizeCategoryName = (category: string): string => {
+  // Convertir la première lettre en majuscule et le reste en minuscule
+  let normalized = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+
+  // Gérer les cas spécifiques de singulier/pluriel ou de casse si nécessaire
+  if (normalized === 'Abonnement') return 'Abonnements'; // 'Abonnement' (singulier) -> 'Abonnements' (pluriel)
+  if (normalized === 'Facture') return 'Factures';       // 'Facture' (singulier) -> 'Factures' (pluriel)
+  if (normalized === 'Alimentation') return 'Alimentation'; // 'alimentation' -> 'Alimentation'
+  if (normalized === 'Transport') return 'Transport';
+  if (normalized === 'Loisirs') return 'Loisirs';
+  if (normalized === 'Santé') return 'Santé';
+  if (normalized === 'Shopping') return 'Shopping';
+
+  return normalized;
+};
+
 interface ExpensePieChartProps {
   data: ExpenseData[];
   title?: string;
@@ -35,12 +52,27 @@ interface ExpensePieChartProps {
 const ExpensePieChart: React.FC<ExpensePieChartProps> = ({ data, title = 'Répartition des Dépenses par Catégorie' }) => {
   const total = data.reduce((sum, item) => sum + item.amount, 0);
 
+  console.log("ExpensePieChart: Données reçues:", data);
+
+  const backgroundColors = data.map(item => {
+    // Utiliser la fonction de normalisation ici
+    const normalizedCategory = normalizeCategoryName(item.category);
+    const color = CATEGORY_COLORS[normalizedCategory];
+    if (!color) {
+      console.warn(`ExpensePieChart: Aucune couleur trouvée pour la catégorie normalisée "${normalizedCategory}" (original: "${item.category}"). Utilisation de la couleur par défaut.`);
+    }
+    return color || '#b2bec3';
+  });
+
+  console.log("ExpensePieChart: Couleurs générées:", backgroundColors);
+
   const chartData = {
+    // Utiliser le label original pour l'affichage, mais la catégorie normalisée pour la couleur
     labels: data.map(item => item.category),
     datasets: [
       {
         data: data.map(item => item.amount),
-        backgroundColor: data.map(item => CATEGORY_COLORS[item.category] || '#b2bec3'),
+        backgroundColor: backgroundColors,
         borderWidth: 1,
       },
     ],

@@ -9,6 +9,7 @@ import {
   Container,
   Paper,
 } from '@mui/material';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Login as LoginIcon } from '@mui/icons-material';
 import { login } from '../../services/authService';
 
@@ -24,7 +25,7 @@ const LoginPage: React.FC = () => {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError('Erreur de connexion au serveur');
+      setError('Email ou mot de passe invalide');
     }
   };
 
@@ -120,6 +121,7 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               variant="outlined"
+              autoComplete="email"
               sx={{
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
                 borderRadius: 1,
@@ -148,6 +150,7 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Mot de passe"
               variant="outlined"
+              autoComplete="current-password"
               sx={{
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
                 borderRadius: 1,
