@@ -13,7 +13,13 @@ class ExpensePredictor:
         df = pd.DataFrame(expenses)
         df.columns = ['ds', 'y']
         df['ds'] = pd.to_datetime(df['ds'])
+
+        # 🔍 Nettoyage des NaN et valeurs infinies
+        df = df.dropna()
+        df = df[np.isfinite(df['y'])]
+
         return df
+
 
     def predict_by_category(self, all_expenses_by_category):
         results = []
