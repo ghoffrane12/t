@@ -32,7 +32,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 //import { predictExpenses } from '../services/predictionService';
 
-// Ajout des périodes comme constante
+// Define periods as a constant array
 const periods = [
   { value: 'DAILY', label: 'Quotidien' },
   { value: 'WEEKLY', label: 'Hebdomadaire' },
@@ -41,18 +41,28 @@ const periods = [
 ];
 
 const ExpensesPage: React.FC = () => {
+  // State for expense prediction (currently commented out)
   const [prediction, setPrediction] = useState<{ 
     globalPrediction: number; 
     categoryPredictions: { [key: string]: number } 
   } | null>(null);
+  // State for loading status
   const [loading, setLoading] = useState(false);
+  // State for error messages
   const [error, setError] = useState<string | null>(null);
+  // State to store the list of expenses
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  // State to control the main expense dialog (add/edit)
   const [openDialog, setOpenDialog] = useState(false);
+  // State to hold the selected expense for editing
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  // State to indicate if currently in editing mode
   const [isEditing, setIsEditing] = useState(false);
+  // State to control the new budget creation form dialog
   const [openBudgetForm, setOpenBudgetForm] = useState(false);
+  // State to temporarily hold expense data if budget creation is prompted
   const [pendingExpense, setPendingExpense] = useState<Omit<Expense, '_id'> | null>(null);
+  // State for the new budget form data
   const [newBudget, setNewBudget] = useState<BudgetCreatePayload>({
     name: '',
     amount: 0,
@@ -69,6 +79,7 @@ const ExpensesPage: React.FC = () => {
     tags: []
   });
 
+  // State for the new expense form data
   const [newExpense, setNewExpense] = useState<Omit<Expense, '_id'>>({
     nom: '',
     description: '',
@@ -77,123 +88,140 @@ const ExpensesPage: React.FC = () => {
     date: new Date().toISOString().split('T')[0]
   });
 
+  // State to control the budget prompt dialog (when no budget exists for category)
   const [openBudgetPrompt, setOpenBudgetPrompt] = useState(false);
+  // State to control the budget exceedance warning dialog
   const [openDepassementDialog, setOpenDepassementDialog] = useState(false);
 
+  // useEffect hook to fetch expenses on component mount
   useEffect(() => {
     fetchExpenses();
-  }, []);
+  }, []); // Empty dependency array means this runs once on mount
 
+  // Function to fetch expenses from the service
   const fetchExpenses = async () => {
     try {
-      setLoading(true);
-      const data = await getExpenses();
-      setExpenses(data);
+      setLoading(true); // Set loading to true while fetching
+      const data = await getExpenses(); // Fetch expenses
+      setExpenses(data); // Update expenses state with fetched data
     } catch (err) {
-      setError('Erreur lors du chargement des dépenses');
-      console.error(err);
+      setError('Erreur lors du chargement des dépenses'); // Set error state if fetching fails
+      console.error(err); // Log the error
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after fetching (success or failure)
     }
   };
 
+  // Function to handle adding a new expense
   const handleAddExpense = async () => {
     try {
-      setLoading(true);
+      setLoading(true); // Set loading to true
+      // Check if a budget exists for the expense category
       const existingBudget = await getBudgetByCategory(newExpense.category);
       
+      // If no budget exists for the category
       if (!existingBudget) {
-        setPendingExpense(newExpense);
-        setOpenBudgetPrompt(true);
-        setOpenDialog(false);
-        setLoading(false);
-        return;
+        setPendingExpense(newExpense); // Store the expense data
+        setOpenBudgetPrompt(true); // Open the budget prompt dialog
+        setOpenDialog(false); // Close the main expense dialog
+        setLoading(false); // Reset loading state
+        return; // Stop the function here
       }
 
+      // If budget exists but expense amount exceeds remaining amount
       if (newExpense.amount > existingBudget.remainingAmount) {
-        setOpenDepassementDialog(true);
-        setPendingExpense(newExpense);
-        setLoading(false);
-        return;
+        setOpenDepassementDialog(true); // Open the budget exceedance dialog
+        setPendingExpense(newExpense); // Store the expense data
+        setLoading(false); // Reset loading state
+        return; // Stop the function here
       }
 
-      await createExpense(newExpense);
-      await fetchExpenses();
-      setOpenDialog(false);
-      resetForm();
+      // If budget exists and amount is within limit, create the expense
+      await createExpense(newExpense); // Create the expense
+      await fetchExpenses(); // Refresh the expenses list
+      setOpenDialog(false); // Close the main expense dialog
+      resetForm(); // Reset the form fields
     } catch (err) {
-      setError('Erreur lors de la création de la dépense');
-      console.error(err);
+      setError('Erreur lors de la création de la dépense'); // Set error state if creation fails
+      console.error(err); // Log the error
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after operation
     }
   };
 
+  // Function to handle creating a new budget (called from budget prompt)
   const handleCreateBudget = async () => {
     try {
-      setLoading(true);
+      setLoading(true); // Set loading to true
+      // Prepare budget data, using category from pending expense if available
       const budgetData: BudgetCreatePayload = {
         ...newBudget,
         category: pendingExpense?.category || newBudget.category
       };
-      await createBudget(budgetData);
+      await createBudget(budgetData); // Create the budget
+      // If there was a pending expense, create it after budget creation
       if (pendingExpense) {
-        await createExpense(pendingExpense);
-        await fetchExpenses();
+        await createExpense(pendingExpense); // Create the pending expense
+        await fetchExpenses(); // Refresh the expenses list
       }
-      setOpenBudgetForm(false);
-      setOpenDialog(false);
-      resetForm();
+      setOpenBudgetForm(false); // Close the budget form dialog
+      setOpenDialog(false); // Ensure main expense dialog is closed
+      resetForm(); // Reset the form fields
     } catch (err) {
-      setError('Erreur lors de la création du budget');
-      console.error(err);
+      setError('Erreur lors de la création du budget'); // Set error state if creation fails
+      console.error(err); // Log the error
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after operation
     }
   };
 
+  // Function to handle editing an existing expense
   const handleEditExpense = (expense: Expense) => {
-    setSelectedExpense(expense);
+    setSelectedExpense(expense); // Set the selected expense
     setNewExpense({
       nom: expense.nom,
       description: expense.description,
       amount: expense.amount,
       category: expense.category,
       date: expense.date
-    });
-    setIsEditing(true);
-    setOpenDialog(true);
+    }); // Populate the form with expense data
+    setIsEditing(true); // Set editing mode to true
+    setOpenDialog(true); // Open the main expense dialog
   };
 
+  // Function to handle updating an existing expense
   const handleUpdateExpense = async () => {
-    if (!selectedExpense) return;
+    if (!selectedExpense) return; // Do nothing if no expense is selected
     try {
-      setLoading(true);
+      setLoading(true); // Set loading to true
+      // Update the expense using its ID
       await updateExpense(selectedExpense._id!, newExpense);
-      await fetchExpenses();
-      setOpenDialog(false);
-      resetForm();
+      await fetchExpenses(); // Refresh the expenses list
+      setOpenDialog(false); // Close the main expense dialog
+      resetForm(); // Reset the form fields
     } catch (error) {
-      setError('Erreur lors de la mise à jour de la dépense');
-      console.error(error);
+      setError('Erreur lors de la mise à jour de la dépense'); // Set error state if update fails
+      console.error(error); // Log the error
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after operation
     }
   };
 
+  // Function to handle deleting an expense
   const handleDeleteExpense = async (id: string) => {
     try {
-      setLoading(true);
-      await deleteExpense(id);
-      await fetchExpenses();
+      setLoading(true); // Set loading to true
+      await deleteExpense(id); // Delete the expense by ID
+      await fetchExpenses(); // Refresh the expenses list
     } catch (err) {
-      setError('Erreur lors de la suppression de la dépense');
-      console.error(err);
+      setError('Erreur lors de la suppression de la dépense'); // Set error state if deletion fails
+      console.error(err); // Log the error
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after operation
     }
   };
 
+  // Function to reset the expense and budget form states
   const resetForm = () => {
     setNewExpense({
       nom: '',
@@ -217,35 +245,39 @@ const ExpensesPage: React.FC = () => {
       description: '',
       tags: []
     });
-    setSelectedExpense(null);
-    setIsEditing(false);
-    setPendingExpense(null);
+    setSelectedExpense(null); // Clear selected expense
+    setIsEditing(false); // Set editing mode to false
+    setPendingExpense(null); // Clear pending expense
   };
 
+  // Function to format a date string
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('fr-FR');
+    return new Date(date).toLocaleDateString('fr-FR'); // Format date to French locale
   };
 
+  // Function to handle canceling the budget prompt
   const handleBudgetPromptCancel = async () => {
+    // If there was a pending expense, create it even without a budget
     if (pendingExpense) {
       try {
-        setLoading(true);
-        await createExpense(pendingExpense);
-        await fetchExpenses();
+        setLoading(true); // Set loading
+        await createExpense(pendingExpense); // Create the pending expense
+        await fetchExpenses(); // Refresh expenses list
       } catch (err) {
-        setError('Erreur lors de la création de la dépense');
+        setError('Erreur lors de la création de la dépense'); // Handle error
       } finally {
-        setLoading(false);
+        setLoading(false); // Reset loading
       }
     }
-    setOpenBudgetPrompt(false);
-    setPendingExpense(null);
-    resetForm();
+    setOpenBudgetPrompt(false); // Close the budget prompt dialog
+    setPendingExpense(null); // Clear pending expense
+    resetForm(); // Reset the form
   };
 
+  // Function to handle confirming budget creation from the prompt
   const handleBudgetPromptCreate = () => {
-    setOpenBudgetPrompt(false);
-    setOpenBudgetForm(true);
+    setOpenBudgetPrompt(false); // Close the budget prompt dialog
+    setOpenBudgetForm(true); // Open the budget creation form dialog
   };
 
   {/*const handlePredict = async () => {

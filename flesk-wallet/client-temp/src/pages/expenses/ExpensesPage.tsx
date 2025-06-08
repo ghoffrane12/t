@@ -14,7 +14,6 @@ const ExpensesPage: React.FC = () => {
       <Sidebar />
       
       <Box component="main" sx={{ flexGrow: 1, ml: '280px' }}>
-        {/* Barre orange supérieure */}
         <AppBar position="static" sx={{ 
           bgcolor: '#F0F3F4', 
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
@@ -24,13 +23,11 @@ const ExpensesPage: React.FC = () => {
           <Toolbar sx={{ minHeight: '64px !important' }} />
         </AppBar>
 
-        {/* Titre de la page */}
         <Box sx={{ p: 3 }}>
           <Typography variant="h4" sx={{ color: '#000000', mb: 4, fontWeight: 500 }}>
             Dépenses
           </Typography>
 
-          {/* Contenu de la page */}
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3 }}>
             {/* Le contenu spécifique aux dépenses sera ajouté ici */}
           </Box>
