@@ -24,3 +24,5 @@ yarn-error.log*
 
 /backend/node_modules/
 venv/
+
+backend/logs/combined.log
